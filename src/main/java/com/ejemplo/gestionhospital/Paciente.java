@@ -1,44 +1,40 @@
 package com.ejemplo.gestionhospital;
 
-
-
 import java.sql.*;
 
 public class Paciente {
+
+    private int id;
     private String nombre;
     private String apellido;
     private String dni;
-    private int estadoGravedad;
-    private int id;
+    private int gravedad;
 
-    public Paciente(String nombre, String apellido, String dni, int estadoGravedad) {
+    // Constructor
+    public Paciente(String nombre, String apellido, String dni, int gravedad) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;
-        this.estadoGravedad = estadoGravedad;
+        this.gravedad = gravedad;
     }
 
-    // Getter para ID
-    public int getId() {
-        return id;
-    }
+    // Obtener lista de pacientes
+    public static void obtenerListaPacientes() {
+        String query = "SELECT p.id, p.nombre, p.apellido, p.dni, p.gravedad, c.habitacion_id, c.id AS cama_id "
+                + "FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id";
 
-    // Métodos para insertar el paciente en la base de datos
-    public void insertarPaciente(String url) {
-        String query = "INSERT INTO pacientes (nombre, apellido, dni, estado_gravedad) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DriverManager.getConnection(url); // Conexión sin autenticación
-             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
 
-            stmt.setString(1, nombre);
-            stmt.setString(2, apellido);
-            stmt.setString(3, dni);
-            stmt.setInt(4, estadoGravedad);
-            stmt.executeUpdate();
-
-            // Obtener el ID del paciente insertado
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                this.id = rs.getInt(1);
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("id") +
+                        ", Nombre: " + rs.getString("nombre") +
+                        ", Apellido: " + rs.getString("apellido") +
+                        ", DNI: " + rs.getString("dni") +
+                        ", Estado de gravedad: " + rs.getInt("gravedad") +
+                        ", Habitación: " + rs.getInt("habitacion_id") +
+                        ", Cama: " + rs.getInt("cama_id"));
             }
 
         } catch (SQLException e) {
@@ -46,16 +42,34 @@ public class Paciente {
         }
     }
 
-    // Getters
-    public String getNombre() {
-        return nombre;
+    // Insertar paciente en la base de datos
+    public void insertarPaciente() {
+        String query = "INSERT INTO pacientes (nombre, apellido, dni, gravedad) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, this.nombre);
+            stmt.setString(2, this.apellido);
+            stmt.setString(3, this.dni);
+            stmt.setInt(4, this.gravedad);
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                this.id = rs.getInt(1);  // Obtener el ID del paciente generado
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getApellido() {
-        return apellido;
-    }
-
-    public String getDni() {
-        return dni;
+    // Getter para ID
+    public int getId() {
+        return id;
     }
 }
+
+
+
