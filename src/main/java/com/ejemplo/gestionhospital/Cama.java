@@ -11,21 +11,17 @@ public class Cama {
     private int paciente_id;
     private String estado;
 
-    // Constructor
     public Cama(int habitacion_id, int id, String estado) {
         this.habitacion_id = habitacion_id;
         this.id = id;
         this.estado = estado;
     }
 
-    // Métodos
-
-    // Obtener habitaciones con camas disponibles
-    public static List<Integer> obtenerHabitacionesConCamasDisponibles(String url) {
+    public static List<Integer> obtenerHabitacionesConCamasDisponibles() {
         List<Integer> habitacionesDisponibles = new ArrayList<>();
         String query = "SELECT DISTINCT habitacion_id FROM camas WHERE estado = 'libre'";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = ConexionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {
 
@@ -40,12 +36,11 @@ public class Cama {
         return habitacionesDisponibles;
     }
 
-    // Obtener camas disponibles para una habitación
-    public static List<Integer> obtenerCamasDisponibles(String url, int habitacionId) {
+    public static List<Integer> obtenerCamasDisponibles(int habitacionId) {
         List<Integer> camasDisponibles = new ArrayList<>();
         String query = "SELECT id FROM camas WHERE habitacion_id = ? AND estado = 'libre'";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = ConexionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, habitacionId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -61,16 +56,24 @@ public class Cama {
         return camasDisponibles;
     }
 
-    // Asignar cama a un paciente
-    public void asignarCama(String url, int pacienteId) {
-        String query = "UPDATE camas SET estado = 'ocupada', paciente_id = ? WHERE habitacion_id = ? AND id = ?";
+    public void asignarCama(int pacienteId) {
+        String verificarQuery = "SELECT estado FROM camas WHERE habitacion_id = ? AND id = ?";
+        String asignarQuery = "UPDATE camas SET estado = 'ocupada', paciente_id = ? WHERE habitacion_id = ? AND id = ? AND estado = 'libre'";
 
-        try (Connection conn = DriverManager.getConnection(url);
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, pacienteId);
-            stmt.setInt(2, this.habitacion_id);
-            stmt.setInt(3, this.id);
-            stmt.executeUpdate();
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement verificarStmt = conn.prepareStatement(verificarQuery);
+             PreparedStatement asignarStmt = conn.prepareStatement(asignarQuery)) {
+
+            verificarStmt.setInt(1, this.habitacion_id);
+            verificarStmt.setInt(2, this.id);
+
+            ResultSet rs = verificarStmt.executeQuery();
+            if (rs.next() && rs.getString("estado").equals("libre")) {
+                asignarStmt.setInt(1, pacienteId);
+                asignarStmt.setInt(2, this.habitacion_id);
+                asignarStmt.setInt(3, this.id);
+                asignarStmt.executeUpdate();
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

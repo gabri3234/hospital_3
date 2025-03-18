@@ -20,8 +20,9 @@ public class Paciente {
 
     // Obtener lista de pacientes
     public static void obtenerListaPacientes() {
-        String query = "SELECT p.id, p.nombre, p.apellido, p.dni, p.gravedad, c.habitacion_id, c.id AS cama_id "
-                + "FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id";
+        String query = "SELECT p.id, p.nombre, p.apellido, p.dni, p.gravedad, " +
+                "COALESCE(c.habitacion_id, 0) AS habitacion_id, COALESCE(c.id, 0) AS cama_id " +
+                "FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id";
 
         try (Connection conn = ConexionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -33,8 +34,8 @@ public class Paciente {
                         ", Apellido: " + rs.getString("apellido") +
                         ", DNI: " + rs.getString("dni") +
                         ", Estado de gravedad: " + rs.getInt("gravedad") +
-                        ", Habitación: " + rs.getInt("habitacion_id") +
-                        ", Cama: " + rs.getInt("cama_id"));
+                        ", Habitación: " + (rs.getInt("habitacion_id") == 0 ? "N/A" : rs.getInt("habitacion_id")) +
+                        ", Cama: " + (rs.getInt("cama_id") == 0 ? "N/A" : rs.getInt("cama_id")));
             }
 
         } catch (SQLException e) {
@@ -57,7 +58,7 @@ public class Paciente {
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                this.id = rs.getInt(1);  // Obtener el ID del paciente generado
+                this.id = rs.getInt(1);
             }
 
         } catch (SQLException e) {
@@ -65,11 +66,8 @@ public class Paciente {
         }
     }
 
-    // Getter para ID
     public int getId() {
         return id;
     }
 }
-
-
 
