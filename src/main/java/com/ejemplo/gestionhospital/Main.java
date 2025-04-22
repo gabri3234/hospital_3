@@ -22,7 +22,7 @@ public class Main {
                     registrarPaciente(scanner);
                     break;
                 case 2:
-                    Paciente.obtenerListaPacientes();
+                    Hospital.obtenerListaPacientes();
                     break;
                 case 3:
                     mostrarHabitacionesDisponibles();
@@ -57,7 +57,7 @@ public class Main {
     }
 
     private static void mostrarHabitacionesDisponibles() {
-        List<Integer> habitaciones = Cama.obtenerHabitacionesConCamasDisponibles();
+        List<Integer> habitaciones = Hospital.obtenerHabitacionesConCamasDisponibles();
         if (habitaciones.isEmpty()) {
             System.out.println("No hay habitaciones con camas disponibles.");
         } else {
@@ -70,7 +70,7 @@ public class Main {
         int pacienteId = scanner.nextInt();
         scanner.nextLine();  // Consumir nueva línea
 
-        List<Integer> habitacionesDisponibles = Cama.obtenerHabitacionesConCamasDisponibles();
+        List<Integer> habitacionesDisponibles = Hospital.obtenerHabitacionesConCamasDisponibles();
         if (habitacionesDisponibles.isEmpty()) {
             System.out.println("No hay camas disponibles en ninguna habitación.");
             return;
@@ -81,7 +81,7 @@ public class Main {
         int habitacionElegida = scanner.nextInt();
         scanner.nextLine();  // Consumir nueva línea
 
-        List<Integer> camasDisponibles = Cama.obtenerCamasDisponibles(habitacionElegida);
+        List<Integer> camasDisponibles = Habitacion.obtenerCamasDisponibles(habitacionElegida);
         if (camasDisponibles.isEmpty()) {
             System.out.println("No hay camas disponibles en la habitación seleccionada.");
             return;
