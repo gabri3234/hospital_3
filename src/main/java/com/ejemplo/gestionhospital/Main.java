@@ -1,43 +1,18 @@
 package com.ejemplo.gestionhospital;
+import com.ejemplo.gestionhospital.GUI.FramePrincipal;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            System.out.println("\n--- Gestión del Hospital ---");
-            System.out.println("1. Registrar nuevo paciente");
-            System.out.println("2. Ver lista de pacientes");
-            System.out.println("3. Ver habitaciones con camas disponibles");
-            System.out.println("4. Asignar cama a paciente");
-            System.out.println("5. Salir");
-            System.out.print("Elige una opción: ");
-            int opcion = scanner.nextInt();
-            scanner.nextLine();  // Consumir nueva línea
 
-            switch (opcion) {
-                case 1:
-                    registrarPaciente(scanner);
-                    break;
-                case 2:
-                    Hospital.obtenerListaPacientes();
-                    break;
-                case 3:
-                    mostrarHabitacionesDisponibles();
-                    break;
-                case 4:
-                    asignarCamaPaciente(scanner);
-                    break;
-                case 5:
-                    System.out.println("Saliendo del sistema...");
-                    scanner.close();
-                    return;
-                default:
-                    System.out.println("Opción no válida. Intente de nuevo.");
-            }
-        }
+        FramePrincipal prueba = new FramePrincipal();
+
+
+
+
     }
 
     private static void registrarPaciente(Scanner scanner) {
