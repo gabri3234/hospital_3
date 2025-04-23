@@ -7,10 +7,10 @@ public class ConexionDB {
     public static Connection getConnection() {
         try {
             String driverName = "com.mysql.cj.jdbc.Driver";
-            Class.forName(driverName); // here is the ClassNotFoundException
+            Class.forName(driverName);
 
             String serverName = "localhost";
-            String mydatabase = "hospital3";
+            String mydatabase = "HospitalFlow";
             String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
             String username = "root";
             String password = "12345678";
