@@ -10,7 +10,7 @@ public class ConexionDB {
             Class.forName(driverName);
 
             String serverName = "localhost";
-            String mydatabase = "HospitalFlow";
+            String mydatabase = "hospital3";
             String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
             String username = "root";
             String password = "12345678";
