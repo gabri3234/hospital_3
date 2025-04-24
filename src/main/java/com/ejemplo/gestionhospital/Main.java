@@ -8,7 +8,6 @@ public class Main {
     public static void main(String[] args) {
 
         Frame frame = new Frame();
-        PanelAcciones main = new PanelAcciones();
         frame.add(new PanelLogin(frame));
 
     }

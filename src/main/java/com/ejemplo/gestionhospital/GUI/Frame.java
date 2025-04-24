@@ -6,9 +6,8 @@ import java.awt.*;
 
 public class Frame extends JFrame {
 
-    private CardLayout cardLayout = new CardLayout();
-    private PanelLogin panelLogin = new PanelLogin(this);
-    private PanelAcciones panelAcciones = new PanelAcciones();
+    private final PanelLogin panelLogin = new PanelLogin(this);
+    private final PanelAcciones panelAcciones = new PanelAcciones();
 
     public Frame(){
 
