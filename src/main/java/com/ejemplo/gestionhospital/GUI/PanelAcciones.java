@@ -7,40 +7,37 @@ import com.ejemplo.gestionhospital.Paciente;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class HospitalGUI extends JFrame {
+public class PanelAcciones extends JPanel {
 
-    public HospitalGUI() {
-        setTitle("Gestión del Hospital");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 300);
-        setLocationRelativeTo(null);
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5, 1, 10, 10));
+    public PanelAcciones() {
 
+        setLayout(new GridLayout(5, 1, 10, 10));
+        inicializarBotones();
+        setVisible(true);
+
+    }
+
+    private void inicializarBotones(){
         JButton btnRegistrarPaciente = new JButton("Registrar nuevo paciente");
         JButton btnVerPacientes = new JButton("Ver lista de pacientes");
         JButton btnVerHabitaciones = new JButton("Ver habitaciones disponibles");
         JButton btnAsignarCama = new JButton("Asignar cama a paciente");
         JButton btnSalir = new JButton("Salir");
 
-        btnRegistrarPaciente.addActionListener(e -> this.registrarPaciente());
+        btnRegistrarPaciente.addActionListener(e -> registrarPaciente());
         btnVerPacientes.addActionListener(e -> Hospital.obtenerListaPacientes());
         btnVerHabitaciones.addActionListener(e -> mostrarHabitaciones());
-        btnAsignarCama.addActionListener(this::asignarCama);
+        btnAsignarCama.addActionListener(e -> asignarCama());
         btnSalir.addActionListener(e -> System.exit(0));
 
-        panel.add(btnRegistrarPaciente);
-        panel.add(btnVerPacientes);
-        panel.add(btnVerHabitaciones);
-        panel.add(btnAsignarCama);
-        panel.add(btnSalir);
-
-        add(panel);
-        setVisible(true);
+        add(btnRegistrarPaciente);
+        add(btnVerPacientes);
+        add(btnVerHabitaciones);
+        add(btnAsignarCama);
+        add(btnSalir);
     }
 
     public void registrarPaciente() {
@@ -61,14 +58,13 @@ public class HospitalGUI extends JFrame {
             try {
                 int g = Integer.parseInt(gravedad.getText());
                 Paciente paciente = new Paciente(nombre.getText(), apellido.getText(), dni.getText(), g);
-                paciente.insertarPaciente();
+                paciente.insertar();
                 JOptionPane.showMessageDialog(this, "Paciente registrado. ID asignado: " + paciente.getId());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Gravedad inválida");
             }
         }
     }
-
 
     private void mostrarHabitaciones() {
         List<Integer> disponibles = Hospital.obtenerHabitacionesConCamasDisponibles();
@@ -79,7 +75,7 @@ public class HospitalGUI extends JFrame {
         }
     }
 
-    private void asignarCama(ActionEvent e) {
+    private void asignarCama() {
         try {
             String inputPaciente = JOptionPane.showInputDialog(this, "Ingrese el ID del paciente:");
             if (inputPaciente == null) return;

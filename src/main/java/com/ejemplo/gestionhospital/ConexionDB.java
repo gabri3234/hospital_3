@@ -4,15 +4,15 @@ import java.sql.DriverManager;
 
 public class ConexionDB {
 
+    private static String username;
+    private static String password;
+
     public static Connection getConnection() {
 
         try {
             String driverName = "com.mysql.cj.jdbc.Driver";
             Class.forName(driverName);
-
             String url = "jdbc:mysql://localhost/hospital3";
-            String username = "root";
-            String password = "12345678";
 
             return DriverManager.getConnection(url, username, password);
 
@@ -20,5 +20,13 @@ public class ConexionDB {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void setUsername(String username){
+        ConexionDB.username = username;
+    }
+
+    public static void setPassword(String password){
+        ConexionDB.password = password;
     }
 }

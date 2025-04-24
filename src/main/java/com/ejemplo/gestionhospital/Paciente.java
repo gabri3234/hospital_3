@@ -10,7 +10,6 @@ public class Paciente {
     private String dni;
     private int gravedad;
 
-    // Constructor
     public Paciente(String nombre, String apellido, String dni, int gravedad) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -18,9 +17,7 @@ public class Paciente {
         this.gravedad = gravedad;
     }
 
-
-    // Insertar paciente en la base de datos
-    public void insertarPaciente() {
+    public void insertar() {
         String query = "INSERT INTO pacientes (nombre, apellido, dni, gravedad) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConexionDB.getConnection();
