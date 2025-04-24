@@ -1,10 +1,11 @@
-package com.ejemplo.gestionhospital.GUIPRUEBA;
+package com.ejemplo.gestionhospital.view;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.UUID;
 
 class MainScreen extends JPanel {
+
     private PatientsScreen patientsScreen;
 
     public void setPatientsScreen(PatientsScreen screen) {

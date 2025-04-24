@@ -41,7 +41,7 @@ public class PanelLogin extends JPanel {
             JOptionPane.showMessageDialog(this, "Usuario o constraseña invalidos");
             return;
         }else{
-            frame.cambiarPanelAcciones();
+
         }
 
     }
