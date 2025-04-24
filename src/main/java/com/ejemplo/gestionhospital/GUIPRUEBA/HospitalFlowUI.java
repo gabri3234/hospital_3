@@ -37,6 +37,7 @@ public class HospitalFlowUI {
 
             frame.add(mainPanel);
             frame.setVisible(true);
+            System.out.println("Hospital flow started");
         });
     }
 }
