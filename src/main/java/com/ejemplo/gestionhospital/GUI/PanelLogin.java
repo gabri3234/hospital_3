@@ -1,7 +1,6 @@
 package com.ejemplo.gestionhospital.GUI;
 
-import com.ejemplo.gestionhospital.ConexionDB;
-import com.ejemplo.gestionhospital.Paciente;
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 
 import javax.swing.*;
 import java.awt.*;

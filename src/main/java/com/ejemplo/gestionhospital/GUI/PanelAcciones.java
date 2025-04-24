@@ -1,16 +1,18 @@
 package com.ejemplo.gestionhospital.GUI;
 
-import com.ejemplo.gestionhospital.Cama;
-import com.ejemplo.gestionhospital.Habitacion;
-import com.ejemplo.gestionhospital.Hospital;
-import com.ejemplo.gestionhospital.Paciente;
+import com.ejemplo.gestionhospital.dao.HabitacionDAO;
+import com.ejemplo.gestionhospital.dao.PacienteDAO;
+import com.ejemplo.gestionhospital.model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 import java.util.List;
 
 public class PanelAcciones extends JPanel {
 
+    private PacienteDAO pacienteDAO = new PacienteDAO();
+    private HabitacionDAO habitacionDAO = new HabitacionDAO();
 
     public PanelAcciones() {
 
@@ -28,7 +30,13 @@ public class PanelAcciones extends JPanel {
         JButton btnSalir = new JButton("Salir");
 
         btnRegistrarPaciente.addActionListener(e -> registrarPaciente());
-        btnVerPacientes.addActionListener(e -> Hospital.obtenerListaPacientes());
+        btnVerPacientes.addActionListener(e -> {
+            try {
+                pacienteDAO.obtenerPacientes();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         btnVerHabitaciones.addActionListener(e -> mostrarHabitaciones());
         btnAsignarCama.addActionListener(e -> asignarCama());
         btnSalir.addActionListener(e -> System.exit(0));
@@ -58,16 +66,18 @@ public class PanelAcciones extends JPanel {
             try {
                 int g = Integer.parseInt(gravedad.getText());
                 Paciente paciente = new Paciente(nombre.getText(), apellido.getText(), dni.getText(), g);
-                paciente.insertar();
+                pacienteDAO.insertarPaciente(paciente);
                 JOptionPane.showMessageDialog(this, "Paciente registrado. ID asignado: " + paciente.getId());
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Gravedad inválida");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
     private void mostrarHabitaciones() {
-        List<Integer> disponibles = Hospital.obtenerHabitacionesConCamasDisponibles();
+        List<Integer> disponibles = habitacionDAO.obtenerHabitacionesDisponibles();
         if (disponibles.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay habitaciones con camas disponibles.");
         } else {
@@ -82,7 +92,7 @@ public class PanelAcciones extends JPanel {
 
             int pacienteId = Integer.parseInt(inputPaciente);
 
-            List<Integer> habitaciones = Hospital.obtenerHabitacionesConCamasDisponibles();
+            List<Integer> habitaciones = habitacionDAO.obtenerHabitacionesDisponibles();
             if (habitaciones.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No hay camas disponibles.");
                 return;
@@ -103,7 +113,7 @@ public class PanelAcciones extends JPanel {
                     camas.toArray(), camas.get(0));
 
             Cama camaLibre = new Cama(habitacion, numeroCama, "libre");
-            camaLibre.asignarCama(pacienteId);
+            camaLibre.asignarPaciente(pacienteId);
             JOptionPane.showMessageDialog(this, "Cama asignada correctamente.");
 
         } catch (Exception ex) {

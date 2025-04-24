@@ -1,8 +1,8 @@
-package com.ejemplo.gestionhospital;
+package com.ejemplo.gestionhospital.model;
+
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Cama {
 
@@ -17,7 +17,8 @@ public class Cama {
         this.estado = estado;
     }
 
-    public void asignarCama(int pacienteId) {
+
+    public void asignarPaciente(int pacienteId) {
         String verificarQuery = "SELECT estado FROM camas WHERE habitacion_id = ? AND id = ?";
         String asignarQuery = "UPDATE camas SET estado = 'ocupada', paciente_id = ? WHERE habitacion_id = ? AND id = ? AND estado = 'libre'";
 
@@ -39,5 +40,39 @@ public class Cama {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    // SETTERS AND GETTERS -----------------------
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getHabitacion_id() {
+        return habitacion_id;
+    }
+
+    public void setHabitacion_id(int habitacion_id) {
+        this.habitacion_id = habitacion_id;
+    }
+
+    public int getPaciente_id() {
+        return paciente_id;
+    }
+
+    public void setPaciente_id(int paciente_id) {
+        this.paciente_id = paciente_id;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

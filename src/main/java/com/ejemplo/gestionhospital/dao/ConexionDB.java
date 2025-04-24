@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital;
+package com.ejemplo.gestionhospital.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
