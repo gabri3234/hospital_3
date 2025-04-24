@@ -1,5 +1,7 @@
 package com.ejemplo.gestionhospital;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hospital {
+
+
 
     public static void obtenerListaPacientes() {
         String query = "SELECT p.id, p.nombre, p.apellido, p.dni, p.gravedad, " +

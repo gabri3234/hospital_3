@@ -1,4 +1,9 @@
-package com.ejemplo.gestionhospital;
+package com.ejemplo.gestionhospital.GUI;
+
+import com.ejemplo.gestionhospital.Cama;
+import com.ejemplo.gestionhospital.Habitacion;
+import com.ejemplo.gestionhospital.Hospital;
+import com.ejemplo.gestionhospital.Paciente;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +27,7 @@ public class HospitalGUI extends JFrame {
         JButton btnAsignarCama = new JButton("Asignar cama a paciente");
         JButton btnSalir = new JButton("Salir");
 
-        btnRegistrarPaciente.addActionListener(this::registrarPaciente);
+        btnRegistrarPaciente.addActionListener(e -> this.registrarPaciente());
         btnVerPacientes.addActionListener(e -> Hospital.obtenerListaPacientes());
         btnVerHabitaciones.addActionListener(e -> mostrarHabitaciones());
         btnAsignarCama.addActionListener(this::asignarCama);
@@ -38,7 +43,7 @@ public class HospitalGUI extends JFrame {
         setVisible(true);
     }
 
-    private void registrarPaciente(ActionEvent e) {
+    public void registrarPaciente() {
         JTextField nombre = new JTextField();
         JTextField apellido = new JTextField();
         JTextField dni = new JTextField();
@@ -64,6 +69,7 @@ public class HospitalGUI extends JFrame {
         }
     }
 
+
     private void mostrarHabitaciones() {
         List<Integer> disponibles = Hospital.obtenerHabitacionesConCamasDisponibles();
         if (disponibles.isEmpty()) {
@@ -77,6 +83,7 @@ public class HospitalGUI extends JFrame {
         try {
             String inputPaciente = JOptionPane.showInputDialog(this, "Ingrese el ID del paciente:");
             if (inputPaciente == null) return;
+
             int pacienteId = Integer.parseInt(inputPaciente);
 
             List<Integer> habitaciones = Hospital.obtenerHabitacionesConCamasDisponibles();
@@ -95,12 +102,12 @@ public class HospitalGUI extends JFrame {
                 return;
             }
 
-            Integer cama = (Integer) JOptionPane.showInputDialog(this, "Selecciona cama:",
+            Integer numeroCama = (Integer) JOptionPane.showInputDialog(this, "Selecciona cama:",
                     "Camas", JOptionPane.QUESTION_MESSAGE, null,
                     camas.toArray(), camas.get(0));
 
-            Cama c = new Cama(habitacion, cama, "libre");
-            c.asignarCama(pacienteId);
+            Cama camaLibre = new Cama(habitacion, numeroCama, "libre");
+            camaLibre.asignarCama(pacienteId);
             JOptionPane.showMessageDialog(this, "Cama asignada correctamente.");
 
         } catch (Exception ex) {
@@ -108,7 +115,4 @@ public class HospitalGUI extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(HospitalGUI::new);
-    }
 }
