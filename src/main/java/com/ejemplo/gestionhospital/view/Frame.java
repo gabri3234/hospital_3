@@ -1,8 +1,6 @@
-package com.ejemplo.gestionhospital.GUI;
+package com.ejemplo.gestionhospital.view;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
-import java.awt.*;
 
 public class Frame extends JFrame {
 

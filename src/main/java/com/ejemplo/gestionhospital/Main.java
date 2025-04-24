@@ -1,8 +1,7 @@
 package com.ejemplo.gestionhospital;
 
-import com.ejemplo.gestionhospital.GUI.Frame;
-import com.ejemplo.gestionhospital.GUI.PanelAcciones;
-import com.ejemplo.gestionhospital.GUI.PanelLogin;
+import com.ejemplo.gestionhospital.view.Frame;
+import com.ejemplo.gestionhospital.view.PanelLogin;
 
 public class Main {
     public static void main(String[] args) {
