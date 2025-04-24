@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.GUIPRUEBA;
+package com.ejemplo.gestionhospital.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,7 +34,7 @@ class BedsScreen extends JPanel {
         bottomPanel.add(backBtn);
         bottomPanel.add(addBedBtn);
 
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "main"));
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         addBedBtn.addActionListener(e -> showAddBedDialog());
 
         add(bottomPanel, BorderLayout.SOUTH);

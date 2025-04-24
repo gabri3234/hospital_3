@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.view;
+package com.ejemplo.gestionhospital.mierda;
 
 import com.ejemplo.gestionhospital.dao.HabitacionDAO;
 import com.ejemplo.gestionhospital.dao.PacienteDAO;

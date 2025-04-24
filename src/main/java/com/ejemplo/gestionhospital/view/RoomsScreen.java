@@ -1,10 +1,8 @@
-package com.ejemplo.gestionhospital.GUIPRUEBA;
+package com.ejemplo.gestionhospital.view;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 
 class RoomsScreen extends JPanel {
     private JTextArea area;
@@ -32,7 +30,7 @@ class RoomsScreen extends JPanel {
         bottomPanel.add(backBtn);
         bottomPanel.add(addRoomBtn);
 
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "main"));
+        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         addRoomBtn.addActionListener(e -> showAddRoomDialog());
 
         add(bottomPanel, BorderLayout.SOUTH);

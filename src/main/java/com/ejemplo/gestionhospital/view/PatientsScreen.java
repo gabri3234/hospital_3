@@ -1,8 +1,9 @@
-package com.ejemplo.gestionhospital.GUIPRUEBA;
+package com.ejemplo.gestionhospital.view;
+
+import com.ejemplo.gestionhospital.model.Paciente;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -32,7 +33,8 @@ class PatientsScreen extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    public void addPatient(String patientInfo) {
+    public void addPatient(Paciente paciente) {
+        String patientInfo = paciente.toString();
         patients.add(patientInfo);
         area.append(patientInfo + "\n\n");
     }

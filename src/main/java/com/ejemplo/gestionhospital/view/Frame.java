@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.GUIPRUEBA;
+package com.ejemplo.gestionhospital.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,15 +21,16 @@ public class Frame extends JFrame {
         JPanel mainPanel = new JPanel(cardLayout);
 
         LoginScreen login = new LoginScreen(mainPanel, cardLayout);
-        MainScreen main = new MainScreen(mainPanel, cardLayout);
+        HomeScreen home = new HomeScreen(mainPanel, cardLayout);
         RoomsScreen rooms = new RoomsScreen(mainPanel, cardLayout);
         PatientsScreen patients = new PatientsScreen(mainPanel, cardLayout);
         BedsScreen beds = new BedsScreen(mainPanel, cardLayout, rooms, patients);
 
-        main.setPatientsScreen(patients);
+        //TODO noloentiendo de momento
+        home.setPatientsScreen(patients);
 
         mainPanel.add(login, "login");
-        mainPanel.add(main, "main");
+        mainPanel.add(home, "home");
         mainPanel.add(rooms, "rooms");
         mainPanel.add(beds, "beds");
         mainPanel.add(patients, "patients");
