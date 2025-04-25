@@ -1,6 +1,6 @@
 package com.ejemplo.gestionhospital.view;
 
-import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,9 @@ public class Frame extends JFrame {
 
     public Frame() {
         try {
-            UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
+            UIManager.put("Button.arc", 10);
+            FlatCarbonIJTheme.setup();
+            UIManager.setLookAndFeel(new FlatCarbonIJTheme());
 
         } catch (Exception ignored) {
         }
