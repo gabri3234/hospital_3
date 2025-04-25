@@ -6,7 +6,6 @@ import com.ejemplo.gestionhospital.model.Paciente;
 import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
-import java.util.UUID;
 
 class HomeScreen extends JPanel {
 
@@ -65,6 +64,7 @@ class HomeScreen extends JPanel {
                 pacienteDAO.insertarPaciente(paciente);
             }catch (SQLException e){
                 JOptionPane.showMessageDialog(this, "No ha sido posible registrar el paciente.");
+                return;
             }
 
             JOptionPane.showMessageDialog(this, "Paciente registrado exitosamente.");

@@ -1,5 +1,7 @@
 package com.ejemplo.gestionhospital.view;
 
+import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -7,7 +9,8 @@ public class Frame extends JFrame {
 
     public Frame() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(new FlatOneDarkIJTheme());
+
         } catch (Exception ignored) {
         }
 
