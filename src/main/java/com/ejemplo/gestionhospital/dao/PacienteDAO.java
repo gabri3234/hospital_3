@@ -52,7 +52,7 @@ public class PacienteDAO {
     }
 
     public void eliminarPaciente(Paciente paciente) throws SQLException {
-        String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = " + paciente.getId();
+        String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = ?";
 
         try (Connection connection = ConexionDB.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
