@@ -14,7 +14,7 @@ public class ConexionDB {
             Class.forName(driverName);
             String url = "jdbc:mysql://localhost/hospital3";
 
-            return DriverManager.getConnection(url, "root", "12345678");
+            return DriverManager.getConnection(url, username, password);
 
         } catch (Exception e) {
             e.printStackTrace();
