@@ -51,12 +51,12 @@ public class PacienteDAO {
         return pacientes;
     }
 
-    public void eliminarPaciente(int id) throws SQLException {
+    public void eliminarPaciente(Paciente paciente) throws SQLException {
         String query = "DELETE FROM pacientes WHERE id = ?";
 
         try (Connection connection = ConexionDB.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, id);
+            stmt.setInt(1, paciente.getId());
             stmt.executeUpdate();
         }
 

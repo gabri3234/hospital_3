@@ -7,6 +7,8 @@ import com.ejemplo.gestionhospital.model.Habitacion;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
@@ -25,6 +27,13 @@ class BedsScreen extends JPanel {
         habitacionDAO = new HabitacionDAO();
         camaDAO = new CamaDAO();
         initializePanel();
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                showAllBeds();
+            }
+        });
 
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         addBedBtn.addActionListener(e -> addNewBeds());
@@ -55,11 +64,17 @@ class BedsScreen extends JPanel {
         int result = JOptionPane.showConfirmDialog(this, panel, "Añadir camas:", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
 
-            int n = Integer.parseInt(camas.getText());
             Habitacion habitacionSeleccionada = (Habitacion) habitaciones.getSelectedItem();
+            int ncamas = Integer.parseInt(camas.getText());
+            int spaceAvailable = getRoomSpaceAvailable(habitacionSeleccionada);
+
+            if(ncamas > spaceAvailable){
+                JOptionPane.showMessageDialog(this, "No es posible añadir las nuevas camas.\nEspacio disponible: " + spaceAvailable, "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             try {
-                addNBedsToRoom(n, habitacionSeleccionada);
+                addNBedsToRoom(ncamas, habitacionSeleccionada);
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "No ha sido posible añadir las nuevas camas.", "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -92,6 +107,20 @@ class BedsScreen extends JPanel {
             area.append("No ha sido posible obtener la lista de camas.");
             throw new RuntimeException(e);
         }
+    }
+
+    private int getRoomSpaceAvailable(Habitacion habitacion) {
+
+        int capacidadMax = habitacion.getCapacidad();
+
+        try {
+            int ocupacion = camaDAO.obtenerCamasHabitacionN(habitacion).size();
+            return capacidadMax - ocupacion;
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "No ha sido posible obtener el numero de camas de la habitacion.", "Error", JOptionPane.ERROR_MESSAGE);
+            return -1;
+        }
+
     }
 
     private void initializePanel(){

@@ -5,6 +5,7 @@ import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 import javax.swing.*;
 import java.awt.*;
 
+
 public class Frame extends JFrame {
 
     public Frame() {
@@ -40,6 +41,22 @@ public class Frame extends JFrame {
         add(mainPanel);
         setVisible(true);
     }
+
+//    public static boolean mostrarConfirmacion() {
+//        UIManager.put("OptionPane.yesButtonText", "Aceptar");
+//        UIManager.put("OptionPane.noButtonText", "Cancelar");
+//
+//        int opcion = JOptionPane.showConfirmDialog(
+//                null,
+//                "¿Estás seguro?",
+//                "Confirmación",
+//                JOptionPane.YES_NO_OPTION,
+//                JOptionPane.QUESTION_MESSAGE
+//        );
+//
+//        return opcion == JOptionPane.YES_OPTION;
+//    }
+
 }
 
 

@@ -1,9 +1,5 @@
 package com.ejemplo.gestionhospital.model;
 
-import com.ejemplo.gestionhospital.dao.ConexionDB;
-
-import java.sql.*;
-
 public class Cama {
 
     private int id;
