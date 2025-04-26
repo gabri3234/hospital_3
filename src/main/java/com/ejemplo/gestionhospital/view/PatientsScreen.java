@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.view;
 
+import com.ejemplo.gestionhospital.dao.CamaDAO;
 import com.ejemplo.gestionhospital.dao.PacienteDAO;
 import com.ejemplo.gestionhospital.model.Paciente;
 
@@ -17,6 +18,7 @@ class PatientsScreen extends JPanel {
     private JButton backBtn;
     private JButton registerPatientBtn;
     private JButton dischargePatientBtn;
+
 
     private List<Paciente> patients;
     private final PacienteDAO pacienteDAO;
@@ -37,25 +39,7 @@ class PatientsScreen extends JPanel {
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         registerPatientBtn.addActionListener(e -> registerPatient());
         dischargePatientBtn.addActionListener(e -> dischargePatient());
-    }
 
-    private void getPatients() {
-        patients = new ArrayList<>();
-        try {
-            patients = pacienteDAO.obtenerPacientes();
-        } catch (SQLException e) {
-            area.append("No ha sido posible obtener la lista de pacientes.");
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void showAllPatients(){
-        getPatients();
-        area.setText("");
-        for(Paciente p : patients){
-            area.append(p.toString());
-            area.append("\n");
-        }
     }
 
     private void registerPatient(){
@@ -102,7 +86,7 @@ class PatientsScreen extends JPanel {
         JComboBox<Paciente> pacientesActuales = new JComboBox<>();
 
         try {
-            List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
+            List<Paciente> pacientes = pacienteDAO.obtenerPacientesIngresados();
             for(Paciente p : pacientes){
                 pacientesActuales.addItem(p);
             }
@@ -112,7 +96,7 @@ class PatientsScreen extends JPanel {
 
         JPanel panel = new JPanel(new GridLayout(0, 1, 10, 10));
         panel.setPreferredSize(new Dimension(500, 150));
-        panel.add(new JLabel("Seleccione paciente:")); panel.add(pacientesActuales);
+        panel.add(new JLabel("Pacientes ingresados:")); panel.add(pacientesActuales);
 
         int result = JOptionPane.showConfirmDialog(this, panel, "Dar de alta:", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
@@ -136,6 +120,25 @@ class PatientsScreen extends JPanel {
 
     }
 
+    private void getPatients() {
+        patients = new ArrayList<>();
+        try {
+            patients = pacienteDAO.obtenerPacientes();
+        } catch (SQLException e) {
+            area.append("No ha sido posible obtener la lista de pacientes.");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showAllPatients(){
+        getPatients();
+        area.setText("");
+        for(Paciente p : patients){
+            area.append(p.toString());
+            area.append("\n");
+        }
+    }
+
     private void initializePanel(){
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
@@ -151,8 +154,10 @@ class PatientsScreen extends JPanel {
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         backBtn = new JButton("⬅️ Atrás");
-        registerPatientBtn = new JButton("➕ Registrar Paciente");
+        registerPatientBtn = new JButton("➕ Registrar");
         dischargePatientBtn = new JButton("Dar Alta");
+
+
         bottomPanel.add(backBtn);
         bottomPanel.add(registerPatientBtn);
         bottomPanel.add(dischargePatientBtn);

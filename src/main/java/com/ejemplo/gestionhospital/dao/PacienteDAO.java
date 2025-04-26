@@ -52,7 +52,7 @@ public class PacienteDAO {
     }
 
     public void eliminarPaciente(Paciente paciente) throws SQLException {
-        String query = "DELETE FROM pacientes WHERE id = ?";
+        String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = " + paciente.getId();
 
         try (Connection connection = ConexionDB.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -60,5 +60,51 @@ public class PacienteDAO {
             stmt.executeUpdate();
         }
 
+    }
+
+    public List<Paciente> obtenerPacientesIngresados() throws SQLException {
+        String query = "SELECT p.* FROM pacientes p JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NOT NULL";
+
+        List<Paciente> pacientes = new ArrayList<>();
+
+        try (Connection connection = ConexionDB.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                Paciente paciente = new Paciente(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getString("dni"),
+                        rs.getInt("gravedad")
+                );
+                pacientes.add(paciente);
+            }
+        }
+
+        return pacientes;
+    }
+
+    public List<Paciente> obtenerPacientesNoIngresados() throws SQLException {
+        String query = "SELECT p.* FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NULL";
+
+        List<Paciente> pacientes = new ArrayList<>();
+
+        try (Connection connection = ConexionDB.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                Paciente paciente = new Paciente(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("apellido"),
+                        rs.getString("dni"),
+                        rs.getInt("gravedad")
+                );
+                pacientes.add(paciente);
+            }
+        }
+
+        return pacientes;
     }
 }

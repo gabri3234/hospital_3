@@ -1,12 +1,16 @@
 package com.ejemplo.gestionhospital.dao;
 
+import com.ejemplo.gestionhospital.model.Cama;
 import com.ejemplo.gestionhospital.model.Habitacion;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HabitacionDAO {
+
+    private CamaDAO camaDAO = new CamaDAO();
 
     public void insertarHabitacion(Habitacion habitacion) throws SQLException {
         String query = "INSERT INTO habitaciones (nombre, capacidad) VALUES (?, ?)";
@@ -49,23 +53,16 @@ public class HabitacionDAO {
         return habitaciones;
     }
 
-    public static List<Integer> obtenerHabitacionesDisponibles() {
-        List<Integer> habitacionesDisponibles = new ArrayList<>();
-        String query = "SELECT DISTINCT habitacion_id FROM camas WHERE estado = 'libre'";
+    public int obtenerEspacioDisponible(Habitacion habitacion) {
 
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        int capacidadMax = habitacion.getCapacidad();
 
-            while (rs.next()) {
-                habitacionesDisponibles.add(rs.getInt("habitacion_id"));
-            }
-
+        try {
+            int ocupacion = camaDAO.obtenerCamasHabitacionN(habitacion).size();
+            return capacidadMax - ocupacion;
         } catch (SQLException e) {
-            e.printStackTrace();
+            return -1;
         }
 
-        return habitacionesDisponibles;
     }
-
 }

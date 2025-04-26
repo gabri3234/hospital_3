@@ -2,8 +2,10 @@ package com.ejemplo.gestionhospital.view;
 
 import com.ejemplo.gestionhospital.dao.CamaDAO;
 import com.ejemplo.gestionhospital.dao.HabitacionDAO;
+import com.ejemplo.gestionhospital.dao.PacienteDAO;
 import com.ejemplo.gestionhospital.model.Cama;
 import com.ejemplo.gestionhospital.model.Habitacion;
+import com.ejemplo.gestionhospital.model.Paciente;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,14 +21,18 @@ class BedsScreen extends JPanel {
     private JTextArea area;
     private JButton backBtn;
     private JButton addBedBtn;
-    private HabitacionDAO habitacionDAO;
-    private CamaDAO camaDAO;
+    private JButton assignBedToPatientBtn;
+
+    private final HabitacionDAO habitacionDAO;
+    private final CamaDAO camaDAO;
+    private final PacienteDAO pacienteDAO;
 
     public BedsScreen(JPanel mainPanel, CardLayout cardLayout) {
 
+        initializePanel();
         habitacionDAO = new HabitacionDAO();
         camaDAO = new CamaDAO();
-        initializePanel();
+        pacienteDAO = new PacienteDAO();
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -37,6 +43,7 @@ class BedsScreen extends JPanel {
 
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         addBedBtn.addActionListener(e -> addNewBeds());
+        assignBedToPatientBtn.addActionListener(e -> assignBedToPatient());
 
     }
 
@@ -66,7 +73,7 @@ class BedsScreen extends JPanel {
 
             Habitacion habitacionSeleccionada = (Habitacion) habitaciones.getSelectedItem();
             int ncamas = Integer.parseInt(camas.getText());
-            int spaceAvailable = getRoomSpaceAvailable(habitacionSeleccionada);
+            int spaceAvailable = habitacionDAO.obtenerEspacioDisponible(habitacionSeleccionada);
 
             if(ncamas > spaceAvailable){
                 JOptionPane.showMessageDialog(this, "No es posible añadir las nuevas camas.\nEspacio disponible: " + spaceAvailable, "Error", JOptionPane.ERROR_MESSAGE);
@@ -109,16 +116,47 @@ class BedsScreen extends JPanel {
         }
     }
 
-    private int getRoomSpaceAvailable(Habitacion habitacion) {
+    private void assignBedToPatient(){
 
-        int capacidadMax = habitacion.getCapacidad();
+        JComboBox<Paciente> pacientesSinIngresar = new JComboBox<>();
+        JComboBox<Cama> camasLibres = new JComboBox<>();
 
         try {
-            int ocupacion = camaDAO.obtenerCamasHabitacionN(habitacion).size();
-            return capacidadMax - ocupacion;
+            List<Paciente> pacientes = pacienteDAO.obtenerPacientesNoIngresados();
+            List<Cama> camas = camaDAO.obtenerCamasLibres();
+
+            for(Paciente p : pacientes){
+                pacientesSinIngresar.addItem(p);
+            }
+
+            for(Cama c : camas){
+                camasLibres.addItem(c);
+            }
+
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "No ha sido posible obtener el numero de camas de la habitacion.", "Error", JOptionPane.ERROR_MESSAGE);
-            return -1;
+            JOptionPane.showMessageDialog(this, "No ha sido posible obtener la lista de pacientes y camas.");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(0, 1, 10, 10));
+        panel.setPreferredSize(new Dimension(500, 150));
+        panel.add(new JLabel("Pacientes sin cama:")); panel.add(pacientesSinIngresar);
+        panel.add(new JLabel("Camas libres:")); panel.add(camasLibres);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "Asignar cama:", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+
+            Paciente pacienteSeleccionado = (Paciente) pacientesSinIngresar.getSelectedItem();
+            Cama camaSeleccionada = (Cama) camasLibres.getSelectedItem();
+
+            try {
+                camaDAO.asignarCamaPaciente(pacienteSeleccionado.getId(), camaSeleccionada.getId());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "No ha sido posible asignarle la cama.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Cama asignada exitosamente.");
+            showAllBeds();
         }
 
     }
@@ -132,54 +170,16 @@ class BedsScreen extends JPanel {
         area.setEditable(false);
         add(new JScrollPane(area), BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
         backBtn = new JButton("⬅️ Atrás");
         addBedBtn = new JButton("➕ Añadir Cama");
+        assignBedToPatientBtn = new JButton("Asignar Cama");
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomPanel.add(backBtn);
         bottomPanel.add(addBedBtn);
+        bottomPanel.add(assignBedToPatientBtn);
         add(bottomPanel, BorderLayout.SOUTH);
     }
-
-    //    private void addNewBeds() {
-//
-//        List<Habitacion> roomOptions;
-//        try {
-//            roomOptions = habitacionDAO.obtenerHabitaciones();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        JPanel panel = new JPanel(new GridLayout(0, 1, 10, 10));
-//        panel.setPreferredSize(new Dimension(400, 300));
-//        JTextField camas = new JTextField();
-//        panel.add(new JLabel("Nuevas camas:")); panel.add(camas);
-//
-//
-//        int result = JOptionPane.showConfirmDialog(this, panel, "Registrar nuevo paciente", JOptionPane.OK_CANCEL_OPTION);
-//        String room = (String) JOptionPane.showInputDialog(this, "Selecciona habitación:", "Añadir Cama", JOptionPane.QUESTION_MESSAGE, null, roomOptions.toArray(new String[0]), null);
-//        if (room != null) {
-//            Map<String, Integer> capacities = roomsScreen.getRoomCapacities();
-//            int capacity = capacities.getOrDefault(room, 0);
-//            int currentPatients = bedsMap.getOrDefault(room, new ArrayList<>()).size();
-//
-//            if (currentPatients >= capacity) {
-//                JOptionPane.showMessageDialog(this, "No se pueden añadir más pacientes. Capacidad máxima alcanzada.", "Capacidad completa", JOptionPane.WARNING_MESSAGE);
-//                return;
-//            }
-//
-//            List<String> unassigned = patientsScreen.getUnassignedPatients();
-//            if (unassigned.isEmpty()) {
-//                JOptionPane.showMessageDialog(this, "No hay pacientes sin cama asignada.", "Aviso", JOptionPane.INFORMATION_MESSAGE);
-//                return;
-//            }
-//
-//            String patient = (String) JOptionPane.showInputDialog(this, "Selecciona paciente:", "Asignar paciente a cama", JOptionPane.QUESTION_MESSAGE, null, unassigned.toArray(), null);
-//            if (patient != null && !patient.isEmpty()) {
-//                bedsMap.computeIfAbsent(room, k -> new ArrayList<>()).add(patient);
-//                patientsScreen.addAssignedPatient(patient);
-//                updateTextArea();
-//            }
-//        }
-//    }
 
 }

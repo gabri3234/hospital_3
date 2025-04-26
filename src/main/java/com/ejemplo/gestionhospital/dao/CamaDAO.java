@@ -66,10 +66,10 @@ public class CamaDAO {
         List<Cama> camas = new ArrayList<>();
 
         try (Connection connection = ConexionDB.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)){
+             PreparedStatement stmt = connection.prepareStatement(query)) {
 
-             stmt.setInt(1, habitacion.getId());
-             ResultSet rs = stmt.executeQuery();
+            stmt.setInt(1, habitacion.getId());
+            ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Cama cama = new Cama(
@@ -86,4 +86,44 @@ public class CamaDAO {
         return camas;
     }
 
+    public List<Cama> obtenerCamasLibres() throws SQLException {
+
+        String query = "SELECT * FROM camas WHERE paciente_id IS NULL";
+        List<Cama> camas = new ArrayList<>();
+
+        try (Connection connection = ConexionDB.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Cama cama = new Cama(
+                        rs.getInt("id"),
+                        rs.getInt("habitacion_id"),
+                        rs.getString("estado"),
+                        rs.getInt("paciente_id")
+                );
+
+                camas.add(cama);
+            }
+        }
+
+        return camas;
+    }
+
+    public void asignarCamaPaciente(int pacienteId, int camaId) throws SQLException {
+        String query = "UPDATE camas SET paciente_id = ? WHERE id = ?";
+
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, pacienteId);
+            stmt.setInt(2, camaId);
+            stmt.executeUpdate();
+
+        }
+
+    }
 }
+
+

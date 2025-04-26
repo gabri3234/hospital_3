@@ -24,30 +24,6 @@ public class Cama {
         return "● Cama " + id + " Habitacion: " + habitacion_id + " Estado: " + estado + " Paciente: " + paciente_id;
     }
 
-//    public void asignarPaciente(int pacienteId) {
-//        String verificarQuery = "SELECT estado FROM camas WHERE habitacion_id = ? AND id = ?";
-//        String asignarQuery = "UPDATE camas SET estado = 'ocupada', paciente_id = ? WHERE habitacion_id = ? AND id = ? AND estado = 'libre'";
-//
-//        try (Connection conn = ConexionDB.getConnection();
-//             PreparedStatement verificarStmt = conn.prepareStatement(verificarQuery);
-//             PreparedStatement asignarStmt = conn.prepareStatement(asignarQuery)) {
-//
-//            verificarStmt.setInt(1, this.habitacion_id);
-//            verificarStmt.setInt(2, this.id);
-//
-//            ResultSet rs = verificarStmt.executeQuery();
-//            if (rs.next() && rs.getString("estado").equals("libre")) {
-//                asignarStmt.setInt(1, pacienteId);
-//                asignarStmt.setInt(2, this.habitacion_id);
-//                asignarStmt.setInt(3, this.id);
-//                asignarStmt.executeUpdate();
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     // SETTERS AND GETTERS -----------------------
 
     public int getId() {
