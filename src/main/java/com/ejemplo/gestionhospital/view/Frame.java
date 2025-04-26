@@ -29,10 +29,7 @@ public class Frame extends JFrame {
         HomeScreen home = new HomeScreen(mainPanel, cardLayout);
         RoomsScreen rooms = new RoomsScreen(mainPanel, cardLayout);
         PatientsScreen patients = new PatientsScreen(mainPanel, cardLayout);
-        BedsScreen beds = new BedsScreen(mainPanel, cardLayout, rooms, patients);
-
-        //TODO noloentiendo de momento
-        home.setPatientsScreen(patients);
+        BedsScreen beds = new BedsScreen(mainPanel, cardLayout);
 
         mainPanel.add(login, "login");
         mainPanel.add(home, "home");

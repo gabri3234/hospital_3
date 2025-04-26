@@ -1,7 +1,6 @@
 package com.ejemplo.gestionhospital.dao;
 
 import com.ejemplo.gestionhospital.model.Habitacion;
-import com.ejemplo.gestionhospital.model.Paciente;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,6 +25,28 @@ public class HabitacionDAO {
             }
 
         }
+    }
+
+    public List<Habitacion> obtenerHabitaciones() throws SQLException {
+        String query = "SELECT * FROM habitaciones";
+        List<Habitacion> habitaciones = new ArrayList<>();
+
+        try (Connection connection = ConexionDB.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+
+                Habitacion habitacion = new Habitacion(
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getInt("capacidad")
+                );
+
+                habitaciones.add(habitacion);
+            }
+        }
+
+        return habitaciones;
     }
 
     public static List<Integer> obtenerHabitacionesDisponibles() {

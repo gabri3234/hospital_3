@@ -20,6 +20,12 @@ public class Paciente {
         this.id = id;
     }
 
+    @Override
+    public String toString(){
+        String result = "● ID: " + id + " " + nombre + " " + apellido + " " + dni + " Gravedad: " + gravedad;
+        return result;
+    }
+
 
     // SETTERS AND GETTERS ------------------------------------------------
 

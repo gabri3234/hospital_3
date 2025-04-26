@@ -1,58 +1,78 @@
 package com.ejemplo.gestionhospital.view;
 
+import com.ejemplo.gestionhospital.dao.HabitacionDAO;
+import com.ejemplo.gestionhospital.model.Habitacion;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 class RoomsScreen extends JPanel {
     private JTextArea area;
-    private java.util.List<String> rooms;
-    private Map<String, Integer> roomCapacities = new HashMap<>();
+    private List<Habitacion> rooms;
+    private JButton backBtn;
+    private JButton addRoomBtn;
+    private HabitacionDAO habitacionDAO;
 
     public RoomsScreen(JPanel mainPanel, CardLayout cardLayout) {
+
         rooms = new ArrayList<>();
-        rooms.add("Habitación 1 Capacidad: 5"); roomCapacities.put("Habitación 1", 5);
-        rooms.add("Habitación 2 Capacidad: 3"); roomCapacities.put("Habitación 2", 3);
-        rooms.add("Habitación 3 Capacidad: 2"); roomCapacities.put("Habitación 3", 2);
+        habitacionDAO = new HabitacionDAO();
 
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        initializePanel();
 
-        area = new JTextArea();
-        area.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        area.setEditable(false);
-        updateTextArea();
-        add(new JScrollPane(area), BorderLayout.CENTER);
-
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton backBtn = new JButton("⬅️ Atrás");
-        JButton addRoomBtn = new JButton("➕ Añadir Habitación");
-        bottomPanel.add(backBtn);
-        bottomPanel.add(addRoomBtn);
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                showAllRooms();
+            }
+        });
 
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
-        addRoomBtn.addActionListener(e -> showAddRoomDialog());
+        addRoomBtn.addActionListener(e -> addNewRoom());
 
-        add(bottomPanel, BorderLayout.SOUTH);
+
     }
 
-    private void showAddRoomDialog() {
-        String input = JOptionPane.showInputDialog(this, "¿Cuántas camas tiene la nueva habitación?", "Nueva Habitación", JOptionPane.QUESTION_MESSAGE);
+    private void addNewRoom() {
+        String input = JOptionPane.showInputDialog(this, "¿Capacidad de la nueva habitación?", "Nueva Habitación", JOptionPane.QUESTION_MESSAGE);
         if (input != null && !input.isEmpty()) {
             try {
-                int beds = Integer.parseInt(input);
-                String room = "Habitación " + (rooms.size() + 1);
-                rooms.add(room + " Capacidad: " + beds);
-                roomCapacities.put(room, beds);
-                updateTextArea();
+
+                int capacidad = Integer.parseInt(input);
+                Habitacion habitacion = new Habitacion(capacidad);
+                habitacionDAO.insertarHabitacion(habitacion);
+                showAllRooms();
+
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Por favor, introduce un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "No ha sido posible agregar la habitación.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    private void updateTextArea() {
-        area.setText(String.join("\n", rooms));
+    private void getRooms() {
+        rooms = new ArrayList<>();
+        try {
+            rooms = habitacionDAO.obtenerHabitaciones();
+        } catch (SQLException e) {
+            area.append("No ha sido posible obtener la lista de habitaciones.");
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showAllRooms(){
+        getRooms();
+        area.setText("");
+        for(Habitacion h : rooms){
+            area.append(h.toString());
+            area.append("\n");
+        }
     }
 
     public java.util.List<String> getRoomNames() {
@@ -63,8 +83,24 @@ class RoomsScreen extends JPanel {
         return names;
     }
 
-    public Map<String, Integer> getRoomCapacities() {
-        return roomCapacities;
+    private void initializePanel(){
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+
+        area = new JTextArea();
+        area.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        area.setEditable(false);
+        add(new JScrollPane(area), BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        backBtn = new JButton("⬅️ Atrás");
+        addRoomBtn = new JButton("➕ Añadir Habitación");
+
+        bottomPanel.add(backBtn);
+        bottomPanel.add(addRoomBtn);
+        add(bottomPanel, BorderLayout.SOUTH);
+
     }
+
 }
 
