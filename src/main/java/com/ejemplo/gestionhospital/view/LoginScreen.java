@@ -25,7 +25,6 @@ class LoginScreen extends JPanel {
 
         if(ConexionDB.getConnection() == null){
             JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos");
-            return;
         }else{
             cardLayout.show(mainPanel, "home");
         }
@@ -44,7 +43,6 @@ class LoginScreen extends JPanel {
         JPanel formPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         formPanel.setOpaque(false);
         formPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
-
         formPanel.add(new JLabel("Usuario:"));
         usernameField = new JTextField();
         formPanel.add(usernameField);

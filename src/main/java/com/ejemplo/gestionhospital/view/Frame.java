@@ -9,13 +9,8 @@ import java.awt.*;
 public class Frame extends JFrame {
 
     public Frame() {
-        try {
-            UIManager.put("Button.arc", 10);
-            FlatCarbonIJTheme.setup();
-            UIManager.setLookAndFeel(new FlatCarbonIJTheme());
 
-        } catch (Exception ignored) {
-        }
+        setLookAndFeel();
 
         setTitle("🏥 HospitalFlow");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,21 +37,17 @@ public class Frame extends JFrame {
         setVisible(true);
     }
 
-//    public static boolean mostrarConfirmacion() {
-//        UIManager.put("OptionPane.yesButtonText", "Aceptar");
-//        UIManager.put("OptionPane.noButtonText", "Cancelar");
-//
-//        int opcion = JOptionPane.showConfirmDialog(
-//                null,
-//                "¿Estás seguro?",
-//                "Confirmación",
-//                JOptionPane.YES_NO_OPTION,
-//                JOptionPane.QUESTION_MESSAGE
-//        );
-//
-//        return opcion == JOptionPane.YES_OPTION;
-//    }
 
+    private void setLookAndFeel(){
+        try {
+            UIManager.put("Button.arc", 10);
+            FlatCarbonIJTheme.setup();
+            UIManager.setLookAndFeel(new FlatCarbonIJTheme());
+
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+    }
 }
 
 
