@@ -81,7 +81,7 @@ public class HabitacionDAO {
         int capacidadMax = habitacion.getCapacidad();
 
         try {
-            int ocupacion = camaDAO.obtenerCamasHabitacionN(habitacion).size();
+            int ocupacion = camaDAO.obtenerCamasOcupadasHabitacionN(habitacion).size();
             return capacidadMax - ocupacion;
         } catch (AccessDataException e) {
             throw new AccessDataException("Error al calcular el espacio disponible en la habitación.", e);

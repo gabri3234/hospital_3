@@ -78,8 +78,8 @@ public class CamaDAO {
         return camas;
     }
 
-    public List<Cama> obtenerCamasHabitacionN(Habitacion habitacion) {
-        String query = "SELECT * FROM camas WHERE habitacion_id = ?";
+    public List<Cama> obtenerCamasOcupadasHabitacionN(Habitacion habitacion) {
+        String query = "SELECT * FROM camas WHERE habitacion_id = ? AND paciente_id IS NOT NULL";
         List<Cama> camas = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection();
