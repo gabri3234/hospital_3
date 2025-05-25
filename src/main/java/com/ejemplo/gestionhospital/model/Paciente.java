@@ -20,6 +20,7 @@ public class Paciente {
         setId(id);
     }
 
+
     @Override
     public String toString() {
         String result = "● ID: " + id + " " + nombre + " " + apellido + " " + dni + " Gravedad: " + gravedad;
