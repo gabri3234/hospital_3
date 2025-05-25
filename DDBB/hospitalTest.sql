@@ -1,8 +1,18 @@
--- Base de datos: `hospital3`
+-- phpMyAdmin SQL Dump
+-- version 5.2.1deb3
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: localhost:3306
+-- Tiempo de generación: 25-05-2025 a las 16:19:44
+-- Versión del servidor: 8.0.42
+-- Versión de PHP: 8.2.28
 
-DROP DATABASE IF EXISTS `hospital3`;
-CREATE DATABASE `hospital3` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `hospital3`;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+CREATE DATABASE IF NOT EXISTS hospital DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE hospital;
 
 -- Tabla: camas
 CREATE TABLE `camas` (
@@ -44,14 +54,16 @@ CREATE TABLE `usuarios` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Inserción de usuarios
+-- Datos: usuarios
 INSERT INTO `usuarios` (`id`, `username`, `password`, `isAdmin`) VALUES
 (1, 'admin', '$2a$10$aq/BFAimr5bZ/7ItLVp/sOalv74E3PZOk0sRxO3e8.O0IahpgCosq', 1),
 (2, 'FranciscoMED', '$2a$10$9rTg/2/03Ws4wNLkhO9i0.E/RIWIYIJ3yTgqRiah5OoTj8tFyPf2W', 0),
 (3, 'CristinaMED', '$2a$10$sWZ99WbgKKi.NlcnzGiMdeAE/smFRHCPlYzTjILAdrkU30iGYlKR6', 0),
 (4, 'GabrielMED', '$2a$10$vFL67hqFJSV8ewXm7l7jV.t4G42ghuIRiVFXUAduduGyNLqoCUvKG', 0);
 
--- Relaciones
+-- Claves foráneas
 ALTER TABLE `camas`
   ADD CONSTRAINT `camas_ibfk_1` FOREIGN KEY (`habitacion_id`) REFERENCES `habitaciones` (`id`),
   ADD CONSTRAINT `camas_ibfk_2` FOREIGN KEY (`paciente_id`) REFERENCES `pacientes` (`id`);
+
+COMMIT;
