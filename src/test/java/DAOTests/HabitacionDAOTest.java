@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,7 +22,6 @@ public class HabitacionDAOTest {
     private Statement statement;
     private ResultSet resultSet;
     private HabitacionDAO habitacionDAO;
-    private CamaDAO camaDAO;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -30,7 +30,6 @@ public class HabitacionDAOTest {
         preparedStatement = mock(PreparedStatement.class);
         statement = mock(Statement.class);
         resultSet = mock(ResultSet.class);
-        camaDAO = mock(CamaDAO.class);
 
         habitacionDAO = new HabitacionDAO(dataSource) {
             @Override
