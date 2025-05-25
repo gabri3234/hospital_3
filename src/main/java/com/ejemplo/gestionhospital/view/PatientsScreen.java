@@ -3,7 +3,9 @@ package com.ejemplo.gestionhospital.view;
 import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.PacienteDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
+import com.ejemplo.gestionhospital.model.Cama;
 import com.ejemplo.gestionhospital.model.Paciente;
+import com.ejemplo.gestionhospital.service.BedService;
 import com.ejemplo.gestionhospital.service.PatientService;
 
 import javax.swing.*;
@@ -15,16 +17,20 @@ import java.util.List;
 
 class PatientsScreen extends JPanel {
     private final PatientService patientService;
+    private final BedService bedService;
+
     private JTextArea area;
     private JButton backBtn;
     private JButton registerPatientBtn;
     private JButton dischargePatientBtn;
+    private JButton assignBedToPatientBtn;
 
 
     public PatientsScreen(JPanel mainPanel, CardLayout cardLayout) {
 
         initializePanel();
         patientService = new PatientService();
+        bedService = new BedService();
 
         this.addComponentListener(new ComponentAdapter() {
             @Override
@@ -36,6 +42,7 @@ class PatientsScreen extends JPanel {
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "home"));
         registerPatientBtn.addActionListener(e -> registerPatient());
         dischargePatientBtn.addActionListener(e -> dischargePatient());
+        assignBedToPatientBtn.addActionListener(e -> assignBedToPatient());
 
     }
 
@@ -117,6 +124,52 @@ class PatientsScreen extends JPanel {
 
     }
 
+    private void assignBedToPatient() {
+
+        JComboBox<Paciente> pacientesSinIngresar = new JComboBox<>();
+        JComboBox<Cama> camasLibres = new JComboBox<>();
+
+        try {
+            List<Paciente> pacientes = patientService.obtenerPacientesNoIngresados();
+            List<Cama> camas = bedService.obtenerCamasLibres();
+
+            for (Paciente p : pacientes) {
+                pacientesSinIngresar.addItem(p);
+            }
+
+            for (Cama c : camas) {
+                camasLibres.addItem(c);
+            }
+
+        } catch (AccessDataException e) {
+            JOptionPane.showMessageDialog(this, "No ha sido posible obtener la lista de pacientes y camas.");
+        }
+
+        JPanel panel = new JPanel(new GridLayout(0, 1, 10, 10));
+        panel.setPreferredSize(new Dimension(500, 150));
+        panel.add(new JLabel("Pacientes sin cama:"));
+        panel.add(pacientesSinIngresar);
+        panel.add(new JLabel("Camas libres:"));
+        panel.add(camasLibres);
+
+        int result = JOptionPane.showConfirmDialog(this, panel, "Asignar cama:", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+
+            Paciente pacienteSeleccionado = (Paciente) pacientesSinIngresar.getSelectedItem();
+            Cama camaSeleccionada = (Cama) camasLibres.getSelectedItem();
+
+            try {
+                bedService.asignarCamaPaciente(pacienteSeleccionado.getId(), camaSeleccionada.getId());
+            } catch (AccessDataException e) {
+                JOptionPane.showMessageDialog(this, "No ha sido posible asignarle la cama.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Cama asignada exitosamente.");
+        }
+
+    }
+
     private void showAllPatients() {
 
         area.setText("");
@@ -150,11 +203,13 @@ class PatientsScreen extends JPanel {
         backBtn = new JButton("⬅️ Atrás");
         registerPatientBtn = new JButton("➕ Registrar");
         dischargePatientBtn = new JButton("Dar Alta");
+        assignBedToPatientBtn = new JButton("Asignar Cama");
 
 
         bottomPanel.add(backBtn);
         bottomPanel.add(registerPatientBtn);
         bottomPanel.add(dischargePatientBtn);
+        bottomPanel.add(assignBedToPatientBtn);
         add(bottomPanel, BorderLayout.SOUTH);
 
     }
