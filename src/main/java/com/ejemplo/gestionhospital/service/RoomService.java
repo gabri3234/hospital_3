@@ -52,9 +52,9 @@ public class RoomService {
     public void eliminarHabitacion(Habitacion habitacionSeleccionada) {
 
         try {
-            int espacioDisponible = camaDAO.obtenerCamasLibresHabitacionN(habitacionSeleccionada).size();
-
-            if (!(espacioDisponible == habitacionSeleccionada.getCapacidad())) {
+            int nCamasLibres = camaDAO.obtenerCamasLibresHabitacionN(habitacionSeleccionada).size();
+            int nCamas = camaDAO.obtenerCamasHabitacionN(habitacionSeleccionada).size();
+            if (!(nCamas == nCamasLibres)) {
                 throw new DeletionNotAllowedException("No se puede eliminar una habitacion que tenga pacientes ingresados");
             }
 
