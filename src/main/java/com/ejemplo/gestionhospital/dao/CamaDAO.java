@@ -78,8 +78,35 @@ public class CamaDAO {
         return camas;
     }
 
-    public List<Cama> obtenerCamasOcupadasHabitacionN(Habitacion habitacion) {
-        String query = "SELECT * FROM camas WHERE habitacion_id = ? AND paciente_id IS NOT NULL";
+    public List<Cama> obtenerCamasHabitacionN(Habitacion habitacion) {
+        String query = "SELECT * FROM camas WHERE habitacion_id = ?";
+        List<Cama> camas = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, habitacion.getId());
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Cama cama = new Cama(
+                        rs.getInt("id"),
+                        rs.getInt("habitacion_id"),
+                        rs.getString("estado"),
+                        rs.getInt("paciente_id")
+                );
+                camas.add(cama);
+            }
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al obtener camas de la habitación", e);
+        }
+
+        return camas;
+    }
+
+    public List<Cama> obtenerCamasLibresHabitacionN(Habitacion habitacion) {
+        String query = "SELECT * FROM camas WHERE habitacion_id = ? AND paciente_id IS NULL";
         List<Cama> camas = new ArrayList<>();
 
         try (Connection conn = dataSource.getConnection();

@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.service;
 
+import com.ejemplo.gestionhospital.dao.CamaDAO;
 import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.HabitacionDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
@@ -11,9 +12,11 @@ import java.util.List;
 public class RoomService {
 
     private final HabitacionDAO habitacionDAO;
+    private final CamaDAO camaDAO;
 
     public RoomService() {
         habitacionDAO = new HabitacionDAO(ConexionDB.getDataSource());
+        camaDAO = new CamaDAO(ConexionDB.getDataSource());
     }
 
     public List<Habitacion> obtenerHabitaciones() {
@@ -49,7 +52,7 @@ public class RoomService {
     public void eliminarHabitacion(Habitacion habitacionSeleccionada) {
 
         try {
-            int espacioDisponible = habitacionDAO.obtenerEspacioDisponible(habitacionSeleccionada);
+            int espacioDisponible = camaDAO.obtenerCamasLibresHabitacionN(habitacionSeleccionada).size();
 
             if (!(espacioDisponible == habitacionSeleccionada.getCapacidad())) {
                 throw new DeletionNotAllowedException("No se puede eliminar una habitacion que tenga pacientes ingresados");
