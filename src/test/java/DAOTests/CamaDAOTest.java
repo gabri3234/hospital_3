@@ -95,6 +95,26 @@ public class CamaDAOTest {
     }
 
     @Test
+    public void testObtenerCamasOcupadasHabitacionN() throws Exception {
+        Habitacion habitacion = new Habitacion();
+        habitacion.setId(2);
+
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        when(preparedStatement.executeQuery()).thenReturn(resultSet);
+
+        when(resultSet.next()).thenReturn(true, false);
+        when(resultSet.getInt("id")).thenReturn(3);
+        when(resultSet.getInt("habitacion_id")).thenReturn(2);
+        when(resultSet.getString("estado")).thenReturn("OCUPADA");
+        when(resultSet.getInt("paciente_id")).thenReturn(77);
+
+        List<Cama> camas = camaDAO.obtenerCamasHabitacionN(habitacion);
+
+        assertEquals(1, camas.size());
+        assertEquals(77, camas.get(0).getPaciente_id());
+    }
+
+    @Test
     public void testObtenerCamasLibres() throws Exception {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
         when(preparedStatement.executeQuery()).thenReturn(resultSet);
