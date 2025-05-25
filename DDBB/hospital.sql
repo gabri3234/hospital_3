@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 
 --
 -- Base de datos: `hospital3`
+CREATE DATABASE IF NOT EXISTS hospital;
+USE hospital;
 --
 
 -- --------------------------------------------------------
