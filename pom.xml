@@ -46,15 +46,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- En tu pom.xml si usas Maven -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>4.11.0</version> <!-- O la versión que uses -->
-            <scope>test</scope>
-        </dependency>
-
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
@@ -68,7 +59,6 @@
             <version>5.10.0</version>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 
