@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.service;
 
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.UsuarioDAO;
 import com.ejemplo.gestionhospital.model.Sesion;
 import com.ejemplo.gestionhospital.model.Usuario;
@@ -12,7 +13,7 @@ public class LoginService {
 
     public LoginService(){
         valid = false;
-        usuarioDAO = new UsuarioDAO();
+        usuarioDAO = new UsuarioDAO(ConexionDB.getDataSource());
     }
 
     public boolean autenticar(String username, String password) {

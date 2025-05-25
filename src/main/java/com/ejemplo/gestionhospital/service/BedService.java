@@ -1,6 +1,7 @@
 package com.ejemplo.gestionhospital.service;
 
 import com.ejemplo.gestionhospital.dao.CamaDAO;
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Cama;
 
@@ -10,7 +11,7 @@ public class BedService {
     private final CamaDAO camaDAO;
 
     public BedService() {
-        camaDAO = new CamaDAO();
+        camaDAO = new CamaDAO(ConexionDB.getDataSource());
     }
 
     public void agregarNCamas(int cantidad, int habitacion) {

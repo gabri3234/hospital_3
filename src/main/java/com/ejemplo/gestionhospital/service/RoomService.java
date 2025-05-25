@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.service;
 
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.HabitacionDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.exception.DeletionNotAllowedException;
@@ -12,7 +13,7 @@ public class RoomService {
     private final HabitacionDAO habitacionDAO;
 
     public RoomService() {
-        habitacionDAO = new HabitacionDAO();
+        habitacionDAO = new HabitacionDAO(ConexionDB.getDataSource());
     }
 
     public List<Habitacion> obtenerHabitaciones() {

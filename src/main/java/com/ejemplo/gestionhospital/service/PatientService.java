@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.service;
 
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.PacienteDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Paciente;
@@ -11,7 +12,7 @@ public class PatientService {
     private final PacienteDAO pacienteDAO;
 
     public PatientService() {
-        pacienteDAO = new PacienteDAO();
+        pacienteDAO = new PacienteDAO(ConexionDB.getDataSource());
     }
 
     public List<Paciente> obtenerPacientesNoIngresados() {

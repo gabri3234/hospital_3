@@ -1,38 +1,44 @@
 package com.ejemplo.gestionhospital.dao;
+
+import com.mysql.cj.jdbc.MysqlDataSource;
+
+import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConexionDB {
 
-    private static String username;
-    private static String password;
-    private static String url;
+    private static DataSource dataSource;
 
-    public static Connection getConnection() {
-
-        try {
-
-            InputStream input = new FileInputStream("config/config.properties");
-
+    static {
+        try (InputStream input = new FileInputStream("config/config.properties")) {
             Properties prop = new Properties();
             prop.load(input);
 
-            url = prop.getProperty("db.url");
-            username = prop.getProperty("db.username");
-            password = prop.getProperty("db.password");
+            String url = prop.getProperty("db.url");
+            String username = prop.getProperty("db.username");
+            String password = prop.getProperty("db.password");
 
-            String driverName = "com.mysql.cj.jdbc.Driver";
-            Class.forName(driverName);
+            MysqlDataSource mysqlDS = new MysqlDataSource();
+            mysqlDS.setURL(url);
+            mysqlDS.setUser(username);
+            mysqlDS.setPassword(password);
 
-            return DriverManager.getConnection(url, username, password);
+            dataSource = mysqlDS;
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Error al cargar configuración de la base de datos", e);
         }
     }
 
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
+    public static DataSource getDataSource() {
+        return dataSource;
+    }
 }

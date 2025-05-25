@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.view;
 
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.PacienteDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Paciente;
@@ -61,7 +62,7 @@ class PatientsScreen extends JPanel {
 
             Paciente paciente = new Paciente(nombre.getText(), apellidos.getText(), dni.getText(), (int) gravedad.getSelectedItem());
 
-            PacienteDAO pacienteDAO = new PacienteDAO();
+            PacienteDAO pacienteDAO = new PacienteDAO(ConexionDB.getDataSource());
 
             try {
                 pacienteDAO.insertarPaciente(paciente);

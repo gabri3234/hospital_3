@@ -4,16 +4,23 @@ import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Cama;
 import com.ejemplo.gestionhospital.model.Habitacion;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CamaDAO {
 
+    private final DataSource dataSource;
+
+    public CamaDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     public void insertarCama(Cama cama) {
         String query = "INSERT INTO camas (habitacion_id, paciente_id, estado) VALUES (?, ?, ?)";
 
-        try (Connection conn = ConexionDB.getConnection();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setInt(1, cama.getHabitacion_id());
@@ -34,8 +41,8 @@ public class CamaDAO {
     public void actualizarEstadoCama(Cama cama) {
         String query = "UPDATE camas SET estado = ? WHERE id = ?";
 
-        try (Connection connection = ConexionDB.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, cama.getEstado());
             stmt.setInt(2, cama.getId());
@@ -50,8 +57,8 @@ public class CamaDAO {
         String query = "SELECT * FROM camas";
         List<Cama> camas = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
-             Statement stmt = connection.createStatement();
+        try (Connection conn = dataSource.getConnection();
+             Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
@@ -75,8 +82,8 @@ public class CamaDAO {
         String query = "SELECT * FROM camas WHERE habitacion_id = ?";
         List<Cama> camas = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, habitacion.getId());
             ResultSet rs = stmt.executeQuery();
@@ -102,8 +109,8 @@ public class CamaDAO {
         String query = "SELECT * FROM camas WHERE paciente_id IS NULL";
         List<Cama> camas = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             ResultSet rs = stmt.executeQuery();
 
@@ -127,7 +134,7 @@ public class CamaDAO {
     public void asignarCamaPaciente(int pacienteId, int camaId) {
         String query = "UPDATE camas SET paciente_id = ? WHERE id = ?";
 
-        try (Connection conn = ConexionDB.getConnection();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, pacienteId);

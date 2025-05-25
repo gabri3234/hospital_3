@@ -3,16 +3,23 @@ package com.ejemplo.gestionhospital.dao;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Paciente;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PacienteDAO {
 
+    private final DataSource dataSource;
+
+    public PacienteDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
     public void insertarPaciente(Paciente paciente) {
         String query = "INSERT INTO pacientes (nombre, apellido, dni, gravedad) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = ConexionDB.getConnection();
+        try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, paciente.getNombre());
@@ -35,7 +42,7 @@ public class PacienteDAO {
         String query = "SELECT * FROM pacientes";
         List<Paciente> pacientes = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
@@ -60,7 +67,7 @@ public class PacienteDAO {
     public void eliminarPaciente(Paciente paciente) {
         String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = ?";
 
-        try (Connection connection = ConexionDB.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
 
             stmt.setInt(1, paciente.getId());
@@ -75,7 +82,7 @@ public class PacienteDAO {
         String query = "SELECT p.* FROM pacientes p JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NOT NULL";
         List<Paciente> pacientes = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
@@ -101,7 +108,7 @@ public class PacienteDAO {
         String query = "SELECT p.* FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NULL";
         List<Paciente> pacientes = new ArrayList<>();
 
-        try (Connection connection = ConexionDB.getConnection();
+        try (Connection connection = dataSource.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
