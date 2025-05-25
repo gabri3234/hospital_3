@@ -1,8 +1,7 @@
-package com.ejemplo.gestionhospital.dao;
+package DAOTests;
 
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Cama;
-import com.ejemplo.gestionhospital.model.Habitacion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

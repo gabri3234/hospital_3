@@ -1,5 +1,6 @@
-package com.ejemplo.gestionhospital.model;
+package DAOTests;
 
+import com.ejemplo.gestionhospital.model.Cama;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
