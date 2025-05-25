@@ -25,7 +25,7 @@ class LoginScreen extends JPanel {
     private void login(JPanel mainPanel,CardLayout cardLayout){
 
         String username = usernameField.getText();
-        String password = Arrays.toString(passwordField.getPassword());
+        String password = new String(passwordField.getPassword());
 
         if(!loginService.autenticar(username, password)){
             JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos");

@@ -159,7 +159,7 @@ public class CamaDAO {
     }
 
     public void asignarCamaPaciente(int pacienteId, int camaId) {
-        String query = "UPDATE camas SET paciente_id = ? WHERE id = ?";
+        String query = "UPDATE camas SET paciente_id = ?, estado = 'OCUPADA' WHERE id = ?";
 
         try (Connection conn = dataSource.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

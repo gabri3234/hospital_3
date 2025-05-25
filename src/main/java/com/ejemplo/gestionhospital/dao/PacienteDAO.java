@@ -65,7 +65,7 @@ public class PacienteDAO {
     }
 
     public void eliminarPaciente(Paciente paciente) {
-        String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = ?";
+        String query = "UPDATE camas SET paciente_id = NULL, estado = 'LIBRE' WHERE paciente_id = ?";
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {

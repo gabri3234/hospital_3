@@ -166,6 +166,7 @@ class PatientsScreen extends JPanel {
             }
 
             JOptionPane.showMessageDialog(this, "Cama asignada exitosamente.");
+            showAllPatients();
         }
 
     }

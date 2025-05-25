@@ -4,6 +4,7 @@ import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.dao.UsuarioDAO;
 import com.ejemplo.gestionhospital.model.Sesion;
 import com.ejemplo.gestionhospital.model.Usuario;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginService {
@@ -22,11 +23,14 @@ public class LoginService {
         valid = false;
 
         if (user != null) {
-            String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-            valid = BCrypt.checkpw(password, hashed);
+            String storedHashed = user.getPassword();
+            valid = BCrypt.checkpw(password, storedHashed);
         }
 
-        Sesion.setUsuarioActual(user);
+        if(valid){
+            Sesion.setUsuarioActual(user);
+        }
+
         return valid;
     }
 

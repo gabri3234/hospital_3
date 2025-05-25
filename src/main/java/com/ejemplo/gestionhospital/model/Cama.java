@@ -16,11 +16,11 @@ public class Cama {
     }
 
     public Cama(){
-
     }
 
     public Cama(int habitacion_id) {
         setHabitacion_id(habitacion_id);
+        setEstado("LIBRE");
     }
 
     @Override
