@@ -21,6 +21,8 @@ public class Habitacion {
         setId(id);
     }
 
+    public Habitacion(){}
+
     @Override
     public String toString(){
         return "● Habitacion " + id + " Capacidad: " + capacidad;
