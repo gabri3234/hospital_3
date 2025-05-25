@@ -2,131 +2,134 @@ package com.ejemplo.gestionhospital.dao;
 
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Paciente;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class PacienteDAO {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    private final DataSource dataSource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    public PacienteDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
+@ExtendWith(MockitoExtension.class)
+public class PacienteDAOTest {
+
+    @Mock
+    private DataSource dataSource;
+
+    @Mock
+    private Connection connection;
+
+    @Mock
+    private PreparedStatement preparedStatement;
+
+    @Mock
+    private Statement statement;
+
+    @Mock
+    private ResultSet resultSet;
+
+    @InjectMocks
+    private PacienteDAO pacienteDAO;
+
+    private Paciente paciente;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        paciente = new Paciente(0, "Juan", "Pérez", "12345678A", 3);
+        when(dataSource.getConnection()).thenReturn(connection);
     }
 
-    public void insertarPaciente(Paciente paciente) {
-        String query = "INSERT INTO pacientes (nombre, apellido, dni, gravedad) VALUES (?, ?, ?, ?)";
+    @Test
+    void testInsertarPaciente() throws Exception {
+        when(connection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(preparedStatement);
+        when(preparedStatement.getGeneratedKeys()).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true);
+        when(resultSet.getInt(1)).thenReturn(1);
 
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        pacienteDAO.insertarPaciente(paciente);
 
-            stmt.setString(1, paciente.getNombre());
-            stmt.setString(2, paciente.getApellido());
-            stmt.setString(3, paciente.getDni());
-            stmt.setInt(4, paciente.getGravedad());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                paciente.setId(rs.getInt(1));
-            }
-
-        } catch (SQLException e) {
-            throw new AccessDataException("Error al insertar paciente.", e);
-        }
+        verify(preparedStatement).setString(1, "Juan");
+        verify(preparedStatement).setString(2, "Pérez");
+        verify(preparedStatement).setString(3, "12345678A");
+        verify(preparedStatement).setInt(4, 3);
+        assertEquals(1, paciente.getId());
     }
 
-    public List<Paciente> obtenerPacientes() {
-        String query = "SELECT * FROM pacientes";
-        List<Paciente> pacientes = new ArrayList<>();
+    @Test
+    void testObtenerPacientes() throws Exception {
+        when(connection.createStatement()).thenReturn(statement);
+        when(statement.executeQuery(anyString())).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true, false);
+        when(resultSet.getInt("id")).thenReturn(1);
+        when(resultSet.getString("nombre")).thenReturn("Juan");
+        when(resultSet.getString("apellido")).thenReturn("Pérez");
+        when(resultSet.getString("dni")).thenReturn("12345678A");
+        when(resultSet.getInt("gravedad")).thenReturn(3);
 
-        try (Connection connection = dataSource.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                Paciente paciente = new Paciente(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido"),
-                        rs.getString("dni"),
-                        rs.getInt("gravedad")
-                );
-                pacientes.add(paciente);
-            }
-
-        } catch (SQLException e) {
-            throw new AccessDataException("Error al obtener la lista de pacientes.", e);
-        }
-
-        return pacientes;
+        List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
+        assertEquals(1, pacientes.size());
+        assertEquals("Juan", pacientes.get(0).getNombre());
     }
 
-    public void eliminarPaciente(Paciente paciente) {
-        String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = ?";
+    @Test
+    void testEliminarPaciente() throws Exception {
+        when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
+        paciente.setId(1);
 
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        pacienteDAO.eliminarPaciente(paciente);
 
-            stmt.setInt(1, paciente.getId());
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new AccessDataException("Error al eliminar paciente.", e);
-        }
+        verify(preparedStatement).setInt(1, 1);
+        verify(preparedStatement).executeUpdate();
     }
 
-    public List<Paciente> obtenerPacientesIngresados() {
-        String query = "SELECT p.* FROM pacientes p JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NOT NULL";
-        List<Paciente> pacientes = new ArrayList<>();
+    @Test
+    void testObtenerPacientesIngresados() throws Exception {
+        when(connection.createStatement()).thenReturn(statement);
+        when(statement.executeQuery(anyString())).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true, false);
+        when(resultSet.getInt("id")).thenReturn(1);
+        when(resultSet.getString("nombre")).thenReturn("Juan");
+        when(resultSet.getString("apellido")).thenReturn("Pérez");
+        when(resultSet.getString("dni")).thenReturn("12345678A");
+        when(resultSet.getInt("gravedad")).thenReturn(3);
 
-        try (Connection connection = dataSource.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                Paciente paciente = new Paciente(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido"),
-                        rs.getString("dni"),
-                        rs.getInt("gravedad")
-                );
-                pacientes.add(paciente);
-            }
-
-        } catch (SQLException e) {
-            throw new AccessDataException("Error al obtener pacientes ingresados.", e);
-        }
-
-        return pacientes;
+        List<Paciente> pacientes = pacienteDAO.obtenerPacientesIngresados();
+        assertEquals(1, pacientes.size());
     }
 
-    public List<Paciente> obtenerPacientesNoIngresados() {
-        String query = "SELECT p.* FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NULL";
-        List<Paciente> pacientes = new ArrayList<>();
+    @Test
+    void testObtenerPacientesNoIngresados() throws Exception {
+        when(connection.createStatement()).thenReturn(statement);
+        when(statement.executeQuery(anyString())).thenReturn(resultSet);
+        when(resultSet.next()).thenReturn(true, false);
+        when(resultSet.getInt("id")).thenReturn(1);
+        when(resultSet.getString("nombre")).thenReturn("Juan");
+        when(resultSet.getString("apellido")).thenReturn("Pérez");
+        when(resultSet.getString("dni")).thenReturn("12345678A");
+        when(resultSet.getInt("gravedad")).thenReturn(3);
 
-        try (Connection connection = dataSource.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
+        List<Paciente> pacientes = pacienteDAO.obtenerPacientesNoIngresados();
+        assertEquals(1, pacientes.size());
+    }
 
-            while (rs.next()) {
-                Paciente paciente = new Paciente(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("apellido"),
-                        rs.getString("dni"),
-                        rs.getInt("gravedad")
-                );
-                pacientes.add(paciente);
-            }
+    @Test
+    void testInsertarPacienteSQLException() throws Exception {
+        when(connection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenThrow(new SQLException("Error"));
 
-        } catch (SQLException e) {
-            throw new AccessDataException("Error al obtener pacientes no ingresados.", e);
-        }
+        AccessDataException exception = assertThrows(
+                AccessDataException.class,
+                () -> pacienteDAO.insertarPaciente(paciente)
+        );
 
-        return pacientes;
+        assertTrue(exception.getMessage().contains("Error al insertar paciente"));
     }
 }
