@@ -21,7 +21,7 @@ public class UsuarioDAO {
 
 
                 String password = rs.getString("password");
-                boolean isAdmin = rs.getBoolean("admin");
+                boolean isAdmin = rs.getBoolean("isAdmin");
 
                 Usuario user = new Usuario(username, password, isAdmin);
                 return user;
@@ -34,5 +34,6 @@ public class UsuarioDAO {
             throw new AccessDataException("Error al consultar el usuario", e);
         }
     }
+
 }
 

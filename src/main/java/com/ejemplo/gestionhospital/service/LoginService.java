@@ -1,17 +1,19 @@
 package com.ejemplo.gestionhospital.service;
 
 import com.ejemplo.gestionhospital.dao.UsuarioDAO;
+import com.ejemplo.gestionhospital.model.Sesion;
 import com.ejemplo.gestionhospital.model.Usuario;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginService {
 
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final UsuarioDAO usuarioDAO;
     private boolean valid;
 
-
-
-
+    public LoginService(){
+        valid = false;
+        usuarioDAO = new UsuarioDAO();
+    }
 
     public boolean autenticar(String username, String password) {
 
@@ -23,6 +25,9 @@ public class LoginService {
             valid = BCrypt.checkpw(password, hashed);
         }
 
+        Sesion.setUsuarioActual(user);
         return valid;
     }
+
+
 }

@@ -1,33 +1,40 @@
 package com.ejemplo.gestionhospital.view;
 
-import com.ejemplo.gestionhospital.dao.ConexionDB;
+import com.ejemplo.gestionhospital.service.LoginService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 class LoginScreen extends JPanel {
 
     private JButton loginBtn;
     private JTextField usernameField;
     private JPasswordField passwordField;
+    private LoginService loginService;
 
     public LoginScreen(JPanel mainPanel, CardLayout cardLayout) {
 
         initializePanel();
         initializeFields();
 
+        loginService = new LoginService();
         loginBtn.addActionListener(e -> login(mainPanel, cardLayout));
     }
 
     private void login(JPanel mainPanel,CardLayout cardLayout){
-        ConexionDB.setUsername(usernameField.getText());
-        ConexionDB.setPassword(new String(passwordField.getPassword()));
 
-        if(ConexionDB.getConnection() == null){
+        String username = usernameField.getText();
+        String password = Arrays.toString(passwordField.getPassword());
+
+        if(!loginService.autenticar(username, password)){
             JOptionPane.showMessageDialog(this, "Usuario o contraseña invalidos");
         }else{
             cardLayout.show(mainPanel, "home");
         }
+
+        usernameField.setText("");
+        passwordField.setText("");
     }
 
 
