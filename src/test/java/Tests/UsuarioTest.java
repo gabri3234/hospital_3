@@ -1,4 +1,4 @@
-package DAOTests;
+package Tests;
 
 import com.ejemplo.gestionhospital.model.Usuario;
 import org.junit.jupiter.api.Test;
