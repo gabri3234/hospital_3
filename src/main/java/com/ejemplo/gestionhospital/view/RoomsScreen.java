@@ -1,14 +1,14 @@
-package com.ejemplo.gestionhospital.PresentationLayer;
+package com.ejemplo.gestionhospital.view;
 
-import com.ejemplo.gestionhospital.DataLayer.HabitacionDAO;
-import com.ejemplo.gestionhospital.BussinesLayer.Habitacion;
+import com.ejemplo.gestionhospital.exception.AccessDataException;
+import com.ejemplo.gestionhospital.model.Habitacion;
+import com.ejemplo.gestionhospital.service.RoomService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 class RoomsScreen extends JPanel {
@@ -16,12 +16,13 @@ class RoomsScreen extends JPanel {
     private List<Habitacion> rooms;
     private JButton backBtn;
     private JButton addRoomBtn;
-    private HabitacionDAO habitacionDAO;
+
+    private RoomService roomService;
 
     public RoomsScreen(JPanel mainPanel, CardLayout cardLayout) {
 
         rooms = new ArrayList<>();
-        habitacionDAO = new HabitacionDAO();
+        roomService = new RoomService();
 
         initializePanel();
 
@@ -45,12 +46,12 @@ class RoomsScreen extends JPanel {
 
                 int capacidad = Integer.parseInt(input);
                 Habitacion habitacion = new Habitacion(capacidad);
-                habitacionDAO.insertarHabitacion(habitacion);
+                roomService.insertarHabitacion(habitacion);
                 showAllRooms();
 
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(this, "Por favor, introduce un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (SQLException e) {
+            } catch (AccessDataException e) {
                 JOptionPane.showMessageDialog(this, "No ha sido posible agregar la habitación.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -59,17 +60,17 @@ class RoomsScreen extends JPanel {
     private void getRooms() {
         rooms = new ArrayList<>();
         try {
-            rooms = habitacionDAO.obtenerHabitaciones();
-        } catch (SQLException e) {
+            rooms = roomService.obtenerHabitaciones();
+        } catch (AccessDataException e) {
             area.append("No ha sido posible obtener la lista de habitaciones.");
             throw new RuntimeException(e);
         }
     }
 
-    private void showAllRooms(){
+    private void showAllRooms() {
         getRooms();
         area.setText("");
-        for(Habitacion h : rooms){
+        for (Habitacion h : rooms) {
             area.append(h.toString());
             area.append("\n");
         }
@@ -83,7 +84,7 @@ class RoomsScreen extends JPanel {
         return names;
     }
 
-    private void initializePanel(){
+    private void initializePanel() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
 

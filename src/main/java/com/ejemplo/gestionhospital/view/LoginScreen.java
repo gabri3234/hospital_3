@@ -1,6 +1,6 @@
-package com.ejemplo.gestionhospital.PresentationLayer;
+package com.ejemplo.gestionhospital.view;
 
-import com.ejemplo.gestionhospital.DataLayer.ConexionDB;
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 
 import javax.swing.*;
 import java.awt.*;

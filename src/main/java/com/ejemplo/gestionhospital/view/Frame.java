@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.PresentationLayer;
+package com.ejemplo.gestionhospital.view;
 
 import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 
@@ -38,11 +38,15 @@ public class Frame extends JFrame {
     }
 
 
-    private void setLookAndFeel(){
+    private void setLookAndFeel() {
         try {
             UIManager.put("Button.arc", 10);
             FlatCarbonIJTheme.setup();
             UIManager.setLookAndFeel(new FlatCarbonIJTheme());
+            UIManager.put("TextField.font", new Font("SansSerif", Font.PLAIN, 16));
+            UIManager.put("Label.font", new Font("SansSerif", Font.PLAIN, 16));
+            UIManager.put("Button.font", new Font("SansSerif", Font.PLAIN, 16));
+
 
         } catch (Exception ignored) {
             ignored.printStackTrace();

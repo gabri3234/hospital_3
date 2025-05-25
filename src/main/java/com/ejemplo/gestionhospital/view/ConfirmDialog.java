@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.PresentationLayer;
+package com.ejemplo.gestionhospital.view;
 
 import javax.swing.*;
 import java.awt.*;

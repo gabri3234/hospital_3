@@ -1,5 +1,6 @@
 package com.ejemplo.gestionhospital.dao;
 
+import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Paciente;
 
 import java.sql.*;
@@ -8,8 +9,7 @@ import java.util.List;
 
 public class PacienteDAO {
 
-
-    public void insertarPaciente(Paciente paciente) throws SQLException {
+    public void insertarPaciente(Paciente paciente) {
         String query = "INSERT INTO pacientes (nombre, apellido, dni, gravedad) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConexionDB.getConnection();
@@ -26,16 +26,19 @@ public class PacienteDAO {
                 paciente.setId(rs.getInt(1));
             }
 
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al insertar paciente.", e);
         }
     }
 
-    public List<Paciente> obtenerPacientes() throws SQLException {
+    public List<Paciente> obtenerPacientes() {
         String query = "SELECT * FROM pacientes";
         List<Paciente> pacientes = new ArrayList<>();
 
         try (Connection connection = ConexionDB.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
+
             while (rs.next()) {
                 Paciente paciente = new Paciente(
                         rs.getInt("id"),
@@ -46,30 +49,36 @@ public class PacienteDAO {
                 );
                 pacientes.add(paciente);
             }
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al obtener la lista de pacientes.", e);
         }
 
         return pacientes;
     }
 
-    public void eliminarPaciente(Paciente paciente) throws SQLException {
+    public void eliminarPaciente(Paciente paciente) {
         String query = "UPDATE camas SET paciente_id = NULL WHERE paciente_id = ?";
 
         try (Connection connection = ConexionDB.getConnection();
              PreparedStatement stmt = connection.prepareStatement(query)) {
+
             stmt.setInt(1, paciente.getId());
             stmt.executeUpdate();
-        }
 
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al eliminar paciente.", e);
+        }
     }
 
-    public List<Paciente> obtenerPacientesIngresados() throws SQLException {
+    public List<Paciente> obtenerPacientesIngresados() {
         String query = "SELECT p.* FROM pacientes p JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NOT NULL";
-
         List<Paciente> pacientes = new ArrayList<>();
 
         try (Connection connection = ConexionDB.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
+
             while (rs.next()) {
                 Paciente paciente = new Paciente(
                         rs.getInt("id"),
@@ -80,19 +89,22 @@ public class PacienteDAO {
                 );
                 pacientes.add(paciente);
             }
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al obtener pacientes ingresados.", e);
         }
 
         return pacientes;
     }
 
-    public List<Paciente> obtenerPacientesNoIngresados() throws SQLException {
+    public List<Paciente> obtenerPacientesNoIngresados() {
         String query = "SELECT p.* FROM pacientes p LEFT JOIN camas c ON p.id = c.paciente_id WHERE c.paciente_id IS NULL";
-
         List<Paciente> pacientes = new ArrayList<>();
 
         try (Connection connection = ConexionDB.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
+
             while (rs.next()) {
                 Paciente paciente = new Paciente(
                         rs.getInt("id"),
@@ -103,6 +115,9 @@ public class PacienteDAO {
                 );
                 pacientes.add(paciente);
             }
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al obtener pacientes no ingresados.", e);
         }
 
         return pacientes;
