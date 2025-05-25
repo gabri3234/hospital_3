@@ -1,18 +1,17 @@
 package com.ejemplo.gestionhospital.dao;
 
-import com.ejemplo.gestionhospital.model.Cama;
+import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Habitacion;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HabitacionDAO {
 
-    private CamaDAO camaDAO = new CamaDAO();
+    private final CamaDAO camaDAO = new CamaDAO();
 
-    public void insertarHabitacion(Habitacion habitacion) throws SQLException {
+    public void insertarHabitacion(Habitacion habitacion) {
         String query = "INSERT INTO habitaciones (nombre, capacidad) VALUES (?, ?)";
 
         try (Connection conn = ConexionDB.getConnection();
@@ -28,41 +27,43 @@ public class HabitacionDAO {
                 habitacion.setId(rs.getInt(1));
             }
 
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al insertar la habitación.", e);
         }
     }
 
-    public List<Habitacion> obtenerHabitaciones() throws SQLException {
+    public List<Habitacion> obtenerHabitaciones() {
         String query = "SELECT * FROM habitaciones";
         List<Habitacion> habitaciones = new ArrayList<>();
 
         try (Connection connection = ConexionDB.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
-            while (rs.next()) {
 
+            while (rs.next()) {
                 Habitacion habitacion = new Habitacion(
                         rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getInt("capacidad")
                 );
-
                 habitaciones.add(habitacion);
             }
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al obtener la lista de habitaciones.", e);
         }
 
         return habitaciones;
     }
 
     public int obtenerEspacioDisponible(Habitacion habitacion) {
-
         int capacidadMax = habitacion.getCapacidad();
 
         try {
             int ocupacion = camaDAO.obtenerCamasHabitacionN(habitacion).size();
             return capacidadMax - ocupacion;
-        } catch (SQLException e) {
-            return -1;
+        } catch (AccessDataException e) {
+            throw new AccessDataException("Error al calcular el espacio disponible en la habitación.", e);
         }
-
     }
 }

@@ -1,7 +1,7 @@
-package com.ejemplo.gestionhospital.view;
+package com.ejemplo.gestionhospital.PresentationLayer;
 
-import com.ejemplo.gestionhospital.dao.HabitacionDAO;
-import com.ejemplo.gestionhospital.model.Habitacion;
+import com.ejemplo.gestionhospital.DataLayer.HabitacionDAO;
+import com.ejemplo.gestionhospital.BussinesLayer.Habitacion;
 
 import javax.swing.*;
 import java.awt.*;

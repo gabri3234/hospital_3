@@ -1,4 +1,4 @@
-package com.ejemplo.gestionhospital.view;
+package com.ejemplo.gestionhospital.PresentationLayer;
 
 import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
 
