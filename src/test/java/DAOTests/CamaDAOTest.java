@@ -1,5 +1,7 @@
 package DAOTests;
 
+import com.ejemplo.gestionhospital.dao.CamaDAO;
+import com.ejemplo.gestionhospital.dao.ConexionDB;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Cama;
 import org.junit.jupiter.api.BeforeEach;
