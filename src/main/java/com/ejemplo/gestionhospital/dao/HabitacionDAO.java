@@ -3,6 +3,7 @@ package com.ejemplo.gestionhospital.dao;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
 import com.ejemplo.gestionhospital.model.Habitacion;
 
+import javax.management.InvalidAttributeValueException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,20 @@ public class HabitacionDAO {
 
         } catch (SQLException e) {
             throw new AccessDataException("Error al insertar la habitación.", e);
+        }
+    }
+
+    public void eliminarHabitacion(Habitacion habitacion) {
+        String query = "DELETE FROM habitaciones WHERE id = ?";
+
+        try (Connection connection = ConexionDB.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1,habitacion.getId());
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new AccessDataException("Error al eliminar la habitacion.", e);
         }
     }
 

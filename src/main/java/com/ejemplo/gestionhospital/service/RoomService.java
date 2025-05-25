@@ -2,6 +2,7 @@ package com.ejemplo.gestionhospital.service;
 
 import com.ejemplo.gestionhospital.dao.HabitacionDAO;
 import com.ejemplo.gestionhospital.exception.AccessDataException;
+import com.ejemplo.gestionhospital.exception.DeletionNotAllowedException;
 import com.ejemplo.gestionhospital.model.Habitacion;
 
 import java.util.List;
@@ -43,4 +44,23 @@ public class RoomService {
             throw e;
         }
     }
+
+    public void eliminarHabitacion(Habitacion habitacionSeleccionada) {
+
+        try {
+            int espacioDisponible = habitacionDAO.obtenerEspacioDisponible(habitacionSeleccionada);
+
+            if (!(espacioDisponible == habitacionSeleccionada.getCapacidad())) {
+                throw new DeletionNotAllowedException("No se puede eliminar una habitacion que tenga pacientes ingresados");
+            }
+
+            habitacionDAO.eliminarHabitacion(habitacionSeleccionada);
+
+        } catch (AccessDataException | DeletionNotAllowedException e) {
+            System.err.println("Error al eliminar la habitación: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }
+

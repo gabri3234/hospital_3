@@ -8,19 +8,19 @@ public class Cama {
     private String estado;
 
     public Cama(int id, int habitacion_id, String estado, int paciente_id) {
-        this.habitacion_id = habitacion_id;
-        this.id = id;
-        this.estado = estado;
-        this.paciente_id = paciente_id;
+        setHabitacion_id(habitacion_id);
+        setId(id);
+        setEstado(estado);
+        setPaciente_id(paciente_id);
 
     }
 
-    public Cama(int habitacion_id){
-        this.habitacion_id = habitacion_id;
+    public Cama(int habitacion_id) {
+        setHabitacion_id(habitacion_id);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "● Cama " + id + " Habitacion: " + habitacion_id + " Estado: " + estado + " Paciente: " + paciente_id;
     }
 

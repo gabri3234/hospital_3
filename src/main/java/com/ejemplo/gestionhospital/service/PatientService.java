@@ -42,19 +42,5 @@ public class PatientService {
             e.printStackTrace();
             throw e;
         }
-
-
-    }
-
-    public List<Paciente> obtenerPacientes() {
-        try {
-            return obtenerPacientes();
-        } catch (AccessDataException e) {
-            System.err.println("Error al obtener todos los pacientes: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
-        }
-
-
     }
 }

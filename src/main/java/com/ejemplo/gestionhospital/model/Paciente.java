@@ -9,30 +9,25 @@ public class Paciente {
     private int gravedad;
 
     public Paciente(String nombre, String apellido, String dni, int gravedad) {
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.gravedad = gravedad;
+        setApellido(apellido);
+        setNombre(nombre);
+        setDni(dni);
+        setGravedad(gravedad);
     }
 
-    public Paciente(int id, String nombre, String apellido, String dni, int gravedad){
+    public Paciente(int id, String nombre, String apellido, String dni, int gravedad) {
         this(nombre, apellido, dni, gravedad);
-        this.id = id;
+        setId(id);
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String result = "● ID: " + id + " " + nombre + " " + apellido + " " + dni + " Gravedad: " + gravedad;
         return result;
     }
 
 
     // SETTERS AND GETTERS ------------------------------------------------
-
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNombre() {
         return nombre;
@@ -68,6 +63,10 @@ public class Paciente {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
 

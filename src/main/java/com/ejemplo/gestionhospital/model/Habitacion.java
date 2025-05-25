@@ -8,17 +8,17 @@ public class Habitacion {
 
 
     public Habitacion(int capacidad){
-        this.capacidad = capacidad;
+        setCapacidad(capacidad);
     }
 
-    public Habitacion(String nombre, int capacidad){
-        this.nombre = nombre;
-        this.capacidad = capacidad;
+    public Habitacion(String nombre, int capacidad) {
+        setCapacidad(capacidad);
+        setNombre(nombre);
     }
 
-    public Habitacion(int id, String nombre, int capacidad){
+    public Habitacion(int id, String nombre, int capacidad) {
         this(nombre, capacidad);
-        this.id = id;
+        setId(id);
     }
 
     @Override
