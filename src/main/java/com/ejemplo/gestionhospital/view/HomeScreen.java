@@ -20,12 +20,10 @@ class HomeScreen extends JPanel {
 
         initializePanel();
 
-        if (Sesion.esAdmin()) {
-            roomsBtn.addActionListener(e -> cardLayout.show(mainPanel, "rooms"));
-        } else {
-            patientsBtn.addActionListener(e -> cardLayout.show(mainPanel, "patients"));
-            bedsBtn.addActionListener(e -> cardLayout.show(mainPanel, "beds"));
-        }
+
+        roomsBtn.addActionListener(e -> cardLayout.show(mainPanel, "rooms"));
+        patientsBtn.addActionListener(e -> cardLayout.show(mainPanel, "patients"));
+        bedsBtn.addActionListener(e -> cardLayout.show(mainPanel, "beds"));
 
         logoutBtn.addActionListener(e -> {
             cardLayout.show(mainPanel, "login");
