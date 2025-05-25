@@ -37,7 +37,7 @@ class CamaDAOTest {
 
     @Test
     void testInsertarCama() throws Exception {
-        Cama cama = new Cama(1, "Disponible", 0);
+        Cama cama = new Cama(1, 1, "Disponible", 0);
 
         when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
@@ -56,7 +56,7 @@ class CamaDAOTest {
 
     @Test
     void testInsertarCamaThrowsException() throws Exception {
-        Cama cama = new Cama(1, "Disponible", 0);
+        Cama cama = new Cama(1, 1, "Disponible", 0);
 
         when(mockConnection.prepareStatement(anyString(), eq(Statement.RETURN_GENERATED_KEYS))).thenThrow(new SQLException("Database error"));
 
