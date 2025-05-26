@@ -35,7 +35,6 @@ class HomeScreen extends JPanel {
             public void componentShown(ComponentEvent e) {
                 removeAll();
                 updatePanel();
-
             }
         });
 
@@ -51,8 +50,8 @@ class HomeScreen extends JPanel {
 
         if (Sesion.esAdmin()) {
             setButton(roomsBtn);
-        } else {
             setButton(bedsBtn);
+        } else {
             setButton(patientsBtn);
         }
 

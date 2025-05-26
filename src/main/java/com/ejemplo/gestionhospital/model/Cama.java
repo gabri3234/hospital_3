@@ -25,7 +25,7 @@ public class Cama {
 
     @Override
     public String toString() {
-        return "● Cama " + id + " Habitacion: " + habitacion_id + " Estado: " + estado + " Paciente: " + paciente_id;
+        return "● Cama " + id + " \tHabitacion: " + habitacion_id + " \tEstado: " + estado + " Paciente: " + paciente_id;
     }
 
     // SETTERS AND GETTERS -----------------------
