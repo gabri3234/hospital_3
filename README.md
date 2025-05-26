@@ -25,6 +25,10 @@
 
 ## 🖥️ Capturas de pantalla
 
+![Pantalla principal de HospitalFlow](images/homescreen.png)
+![Pantalla principal de HospitalFlow](images/patients.png)
+![Pantalla principal de HospitalFlow](images/beds.png)
+![Pantalla principal de HospitalFlow](images/rooms.png)
 
 
 ## ⚙️ Instalación y ejecución
