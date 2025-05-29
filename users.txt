@@ -1,0 +1,7 @@
+ADMIN
+- admin:admin1234
+
+PERSONAL MEDICO
+- FranciscoMED:medico1
+- CristinaMED:medico2
+- GabrielMED:medico3
