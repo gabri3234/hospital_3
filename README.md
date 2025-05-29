@@ -67,8 +67,6 @@ db.user=tu_usuario
 db.password=tu_contraseña
 ```
 
-  ✅ Asegúrate de que el usuario tenga permisos para leer y escribir en la base de datos
-
   💡 Asegúrate de que el usuario tenga permisos de lectura y escritura sobre la base de datos.
 
 ### 4. Ejecuta la aplicación
