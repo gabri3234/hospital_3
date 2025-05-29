@@ -58,7 +58,7 @@ Edita el archivo `config.properties` que se encuentra en el directorio config de
 
 ```properties
 # Dirección de la base de datos (puerto por defecto: 3306)
-db.url=jdbc:mysql://localhost:3306/hospitalflow
+db.url=jdbc:mysql://localhost:3306/hospital
 
 # Usuario de MySQL
 db.user=tu_usuario
